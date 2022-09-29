@@ -6,14 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".HomePage">
 
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/cameraButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="322dp"
-        android:text="HomePage"
+        android:layout_marginTop="532dp"
+        android:onClick="openCamera"
+        android:text="Scan book"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/cameraImageView"
+        android:layout_width="249dp"
+        android:layout_height="238dp"
+        android:layout_marginTop="158dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_background" />
 </androidx.constraintlayout.widget.ConstraintLayout>
