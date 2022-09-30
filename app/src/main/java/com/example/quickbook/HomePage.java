@@ -111,6 +111,7 @@ public class HomePage extends AppCompatActivity {
                     public void run() {
                         Log.i("Failed!", "could not send request");
                         Log.i ("Failed", e.toString());
+
                     }
                 });
             }
