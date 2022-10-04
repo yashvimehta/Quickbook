@@ -41,6 +41,7 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         imageImageView = findViewById(R.id.imageImageView);
+        imageImageView.setVisibility(View.INVISIBLE);
         logoImageView = findViewById(R.id.logoImageView);
         cameraImageView = findViewById(R.id.cameraImageView);
         messageTextView = findViewById(R.id.messageTextView);
@@ -58,8 +59,9 @@ public class HomePage extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST) {
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
-            imageImageView.setVisibility(View.VISIBLE);
+
             logoImageView.setVisibility(View.INVISIBLE);
+            imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
             messageTextView.setVisibility(View.INVISIBLE);
 
