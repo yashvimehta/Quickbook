@@ -1,18 +1,10 @@
 package com.example.quickbook;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -20,16 +12,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,7 +29,8 @@ import okhttp3.Response;
 
 public class HomePage extends AppCompatActivity {
 
-    ImageView cameraImageView;
+    ImageView imageImageView, logoImageView, cameraImageView;
+    TextView messageTextView;
     public static final int CAMERA_REQUEST=100;
     public static final int CROP_PIC=200;
     private Uri picUri;
@@ -52,7 +40,11 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        imageImageView = findViewById(R.id.imageImageView);
+        logoImageView = findViewById(R.id.logoImageView);
         cameraImageView = findViewById(R.id.cameraImageView);
+        messageTextView = findViewById(R.id.messageTextView);
+
     }
 
     public void openCamera ( View view){
@@ -65,8 +57,13 @@ public class HomePage extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST) {
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
-            cameraImageView.setImageBitmap(bitmap);
-            cameraImageView.setImageBitmap(bitmap);
+            imageImageView.setImageBitmap(bitmap);
+            imageImageView.setVisibility(View.VISIBLE);
+            logoImageView.setVisibility(View.INVISIBLE);
+            cameraImageView.setVisibility(View.INVISIBLE);
+            messageTextView.setVisibility(View.INVISIBLE);
+
+
             connectServer(bitmap);
         }
     }
