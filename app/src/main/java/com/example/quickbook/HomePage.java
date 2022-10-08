@@ -103,6 +103,7 @@ public class HomePage extends AppCompatActivity {
             messageTextView.setVisibility(View.INVISIBLE);
 
         }
+        
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
 //            Uri selectedImage = data.getData();
 //            String[] filePathColumn = { MediaStore.Images.Media.DATA };
