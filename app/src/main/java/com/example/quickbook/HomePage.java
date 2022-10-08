@@ -141,7 +141,10 @@ public class HomePage extends AppCompatActivity {
         final File file = new File(filePath);
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
-
+//        RequestBody postBodyImage = new MultipartBody.Builder()
+////                    .setType(MultipartBody.FORM)
+////                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
+////                    .build();
 
         postRequest(postUrl1, requestFile);
         Log.i("connects", "");
@@ -150,9 +153,7 @@ public class HomePage extends AppCompatActivity {
 
     void postRequest(String postUrl, RequestBody postBody) {
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(30, TimeUnit.SECONDS) // read timeout
-                .build();
+        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(postUrl)
                 .post(postBody)
