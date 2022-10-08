@@ -71,7 +71,7 @@ public class HomePage extends AppCompatActivity {
             imageImageView.setImageBitmap(bitmap);
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            File file = new File(directory, "UniqueFileName" + ".jpg");
+            File file = new File(directory, "UniqueFileName5" + ".jpg");
             if (!file.exists()) {
                 Log.d("path", file.toString());
                 FileOutputStream fos = null;
