@@ -137,16 +137,21 @@ public class HomePage extends AppCompatActivity {
     void connectServer(Bitmap bitmap){
         Uri tempUri = saveBitmapImage(HomePage.this, bitmap);
         String filePath = getFilePathFromUri(tempUri);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
 
         final File file = new File(filePath);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+//        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
-//        RequestBody postBodyImage = new MultipartBody.Builder()
-////                    .setType(MultipartBody.FORM)
-////                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
-////                    .build();
+        RequestBody postBodyImage = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
+                    .build();
 
-        postRequest(postUrl1, requestFile);
+        postRequest(postUrl1, postBodyImage);
         Log.i("connects", "");
     }
 
