@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -87,7 +88,17 @@ public class HomePage extends AppCompatActivity {
 
         }
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+            Log.i("Checking","Checking");
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                Log.i("Checking","Success");
+            } catch (IOException e) {
+                Log.i("Checking","Fail");
+                e.printStackTrace();
+            }
+            //Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
             connectServer(bitmap);
             logoImageView.setVisibility(View.INVISIBLE);
@@ -166,8 +177,9 @@ public class HomePage extends AppCompatActivity {
 
     void postRequest(String postUrl, RequestBody postBody) {
 
-        OkHttpClient client = new OkHttpClient();
-
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(30, TimeUnit.SECONDS) // read timeout
+                .build();
         Request request = new Request.Builder()
                 .url(postUrl)
                 .post(postBody)
