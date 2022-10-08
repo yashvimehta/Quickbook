@@ -80,9 +80,7 @@ public class HomePage extends AppCompatActivity {
             imageImageView.setImageBitmap(bitmap);
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            Long tsLong = System.currentTimeMillis();
-            String ts = tsLong.toString();
-            File file = new File(directory, ts + ".jpg");
+            File file = new File(directory, "UniqueFileNameee" + ".jpg");
             if (!file.exists()) {
                 Log.d("path", file.toString());
                 FileOutputStream fos = null;
@@ -103,8 +101,8 @@ public class HomePage extends AppCompatActivity {
             messageTextView.setVisibility(View.INVISIBLE);
 
         }
-        
-        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data!=null) {
+            Log.i("Checking","Checking");
 //            Uri selectedImage = data.getData();
 //            String[] filePathColumn = { MediaStore.Images.Media.DATA };
 //            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
@@ -112,8 +110,10 @@ public class HomePage extends AppCompatActivity {
 //            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 //            String picturePath = cursor.getString(columnIndex);
 //            cursor.close();
+            imageImageView.setVisibility(View.INVISIBLE);
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
+            imageImageView.setVisibility(View.VISIBLE);
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
