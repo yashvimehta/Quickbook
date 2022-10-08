@@ -87,9 +87,15 @@ public class HomePage extends AppCompatActivity {
 
         }
         else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+//            Uri selectedImage = data.getData();
+//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+//            cursor.moveToFirst();
+//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//            String picturePath = cursor.getString(columnIndex);
+//            cursor.close();
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
-            connectServer(bitmap);
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
@@ -98,10 +104,11 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
-    void connectServer(Bitmap bitmap){
+    void connectServer(String file){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
+        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
