@@ -124,7 +124,7 @@ public class HomePage extends AppCompatActivity {
                 .build();
 
         postRequest(postUrl1, postBodyImage);
-        postRequest(postUrl2, postBodyImage);
+        //postRequest(postUrl2, postBodyImage);
         Log.i("connects", "");
 //        String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), bitmap, "Title", null);
 //        Uri uri= Uri.parse(path);
@@ -177,9 +177,12 @@ public class HomePage extends AppCompatActivity {
 
     void postRequest(String postUrl, RequestBody postBody) {
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(30, TimeUnit.SECONDS) // read timeout
-                .build();
+        OkHttpClient client = new OkHttpClient();
+                //.Builder()
+                //.readTimeout(60, TimeUnit.SECONDS) // read timeout
+                //.connectTimeout(60, TimeUnit.SECONDS)
+                //.writeTimeout(60, TimeUnit.SECONDS)
+                //.build();
         Request request = new Request.Builder()
                 .url(postUrl)
                 .post(postBody)
