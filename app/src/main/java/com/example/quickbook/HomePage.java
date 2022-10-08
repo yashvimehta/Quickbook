@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -109,80 +110,49 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
-    void connectServer(Bitmap bitmap){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
-        String postUrl2= "http://20.219.149.149:5000/identify";
+    public Uri saveBitmapImage(Context inContext, Bitmap inImage) {
+        Log.i("SAVE", "saving image...");
 
-        RequestBody postBodyImage = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
-                .build();
-
-        postRequest(postUrl1, postBodyImage);
-        //postRequest(postUrl2, postBodyImage);
-        Log.i("connects", "");
-//        String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), bitmap, "Title", null);
-//        Uri uri= Uri.parse(path);
-//        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-//        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-//        File file = new File(directory, "UniqueFileName" + ".jpg");
-//        if (!file.exists()) {
-//            Log.d("path", file.toString());
-//            FileOutputStream fos = null;
-//            try {
-//                fos = new FileOutputStream(file);
-//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//                fos.flush();
-//                fos.close();
-//                readFile(file.toString());
-//            } catch (java.io.IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Quickbook" + Calendar.getInstance().getTime(), null);
+        return Uri.parse(path);
     }
 
-//    void readFile(String path){
-//        File file = new File(path);
-//        int size = (int) file.length();
-//        byte[] bytes = new byte[size];
-//        try {
-//            InputStream buf = new ByteArrayInputStream(file.getBytes());
-//            buf.read(bytes, 0, bytes.length);
-//            buf.close();
-//            byte[] byteArray = buf.readAllBytes();
-//            String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
-//            String postUrl2= "http://20.219.149.149:5000/identify";
-//
-//            RequestBody postBodyImage = new MultipartBody.Builder()
-//                    .setType(MultipartBody.FORM)
-//                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
-//                    .build();
-//
-//            postRequest(postUrl1, postBodyImage);
-//            postRequest(postUrl2, postBodyImage);
-//            buf.close();
-//        } catch (FileNotFoundException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+    public String getFilePathFromUri(Uri uri) {
+        String path = "";
+        if (HomePage.this.getContentResolver() != null) {
+            Cursor cursor = HomePage.this.getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                path = cursor.getString(idx);
+                cursor.close();
+            }
+        }
+
+        return path;
+    }
+
+    void connectServer(Bitmap bitmap){
+        Uri tempUri = saveBitmapImage(HomePage.this, bitmap);
+        String filePath = getFilePathFromUri(tempUri);
+
+        final File file = new File(filePath);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
+
+
+        postRequest(postUrl1, requestFile);
+        Log.i("connects", "");
+    }
+
 
     void postRequest(String postUrl, RequestBody postBody) {
 
-        OkHttpClient client = new OkHttpClient();
-                //.Builder()
-                //.readTimeout(60, TimeUnit.SECONDS) // read timeout
-                //.connectTimeout(60, TimeUnit.SECONDS)
-                //.writeTimeout(60, TimeUnit.SECONDS)
-                //.build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(30, TimeUnit.SECONDS) // read timeout
+                .build();
         Request request = new Request.Builder()
                 .url(postUrl)
                 .post(postBody)
