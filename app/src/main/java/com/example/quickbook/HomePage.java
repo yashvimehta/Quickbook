@@ -111,6 +111,8 @@ public class HomePage extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
+            Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+            imageImageView.setImageBitmap(bitmap);
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
