@@ -3,17 +3,14 @@ package com.example.quickbook;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -21,14 +18,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -47,10 +43,7 @@ public class HomePage extends AppCompatActivity {
     public static final int CROP_PIC=200;
     private Uri picUri;
     ActivityResultLauncher<String> mgetContent;
-    public final String APP_TAG = "MyCustomApp";
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    public String photoFileName = "photo.jpg";
-    File photoFile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,19 +53,14 @@ public class HomePage extends AppCompatActivity {
         logoImageView = findViewById(R.id.logoImageView);
         cameraImageView = findViewById(R.id.cameraImageView);
         messageTextView = findViewById(R.id.messageTextView);
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
     }
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "1mind_" + timeStamp + ".jpg";
-        File photo = new File(Environment.getExternalStorageDirectory(),  imageFileName);
-        return photo;
-    }
-    public void openCamera ( View view) throws IOException {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        File imageFile = createImageFile();
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+    public void openCamera ( View view){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA_REQUEST);
     }
 
     @Override
@@ -81,21 +69,36 @@ public class HomePage extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST) {
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+            File file = new File(directory, "UniqueFileName" + ".jpg");
+            if (!file.exists()) {
+                Log.d("path", file.toString());
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.flush();
+                    fos.close();
+                    connectServer(file.toString());
+                } catch (java.io.IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
             messageTextView.setVisibility(View.INVISIBLE);
 
-            connectServer(bitmap);
         }
     }
 
-    void connectServer(Bitmap bitmap){
-
+    void connectServer(String file){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
+        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
@@ -108,7 +111,54 @@ public class HomePage extends AppCompatActivity {
 
         postRequest(postUrl1, postBodyImage);
         postRequest(postUrl2, postBodyImage);
+//        String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), bitmap, "Title", null);
+//        Uri uri= Uri.parse(path);
+//        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+//        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+//        File file = new File(directory, "UniqueFileName" + ".jpg");
+//        if (!file.exists()) {
+//            Log.d("path", file.toString());
+//            FileOutputStream fos = null;
+//            try {
+//                fos = new FileOutputStream(file);
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+//                fos.flush();
+//                fos.close();
+//                readFile(file.toString());
+//            } catch (java.io.IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
+
+//    void readFile(String path){
+//        File file = new File(path);
+//        int size = (int) file.length();
+//        byte[] bytes = new byte[size];
+//        try {
+//            InputStream buf = new ByteArrayInputStream(file.getBytes());
+//            buf.read(bytes, 0, bytes.length);
+//            buf.close();
+//            byte[] byteArray = buf.readAllBytes();
+//            String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
+//            String postUrl2= "http://20.219.149.149:5000/identify";
+//
+//            RequestBody postBodyImage = new MultipartBody.Builder()
+//                    .setType(MultipartBody.FORM)
+//                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
+//                    .build();
+//
+//            postRequest(postUrl1, postBodyImage);
+//            postRequest(postUrl2, postBodyImage);
+//            buf.close();
+//        } catch (FileNotFoundException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
 
     void postRequest(String postUrl, RequestBody postBody) {
 
