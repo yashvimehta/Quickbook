@@ -79,6 +79,7 @@ public class HomePage extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST) {
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+            Log.i("1", bitmap.toString());
             imageImageView.setImageBitmap(bitmap);
             connectServer(bitmap);
             logoImageView.setVisibility(View.INVISIBLE);
@@ -102,6 +103,7 @@ public class HomePage extends AppCompatActivity {
             //Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
             connectServer(bitmap);
+            Log.i("2", bitmap.toString());
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
