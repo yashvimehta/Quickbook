@@ -65,12 +65,16 @@ public class HomePage extends AppCompatActivity {
     }
 
     public void openGallery(View view){
+        Log.i("Started","start gallery");
         Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
         startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
 
     public void openCamera ( View view){
+        Log.i("Started","start camera");
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         startActivityForResult(intent, CAMERA_REQUEST);
     }
 
@@ -79,7 +83,7 @@ public class HomePage extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST) {
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
-            Log.i("1", bitmap.toString());
+            Log.i("Yash", bitmap.toString());
             imageImageView.setImageBitmap(bitmap);
             connectServer(bitmap);
             logoImageView.setVisibility(View.INVISIBLE);
@@ -103,7 +107,7 @@ public class HomePage extends AppCompatActivity {
             //Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
             connectServer(bitmap);
-            Log.i("2", bitmap.toString());
+            Log.i("Yash", bitmap.toString());
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
