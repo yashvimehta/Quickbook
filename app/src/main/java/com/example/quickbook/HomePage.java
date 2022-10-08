@@ -78,22 +78,7 @@ public class HomePage extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST) {
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
-            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            File file = new File(directory, "UniqueFileNameee" + ".jpg");
-            if (!file.exists()) {
-                Log.d("path", file.toString());
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                    fos.flush();
-                    fos.close();
-                    connectServer(file.toString());
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            connectServer(bitmap);
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
@@ -101,19 +86,10 @@ public class HomePage extends AppCompatActivity {
             messageTextView.setVisibility(View.INVISIBLE);
 
         }
-        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data!=null) {
-            Log.i("Checking","Checking");
-//            Uri selectedImage = data.getData();
-//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//            cursor.close();
-            imageImageView.setVisibility(View.INVISIBLE);
+        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             imageImageView.setImageBitmap(bitmap);
-            imageImageView.setVisibility(View.VISIBLE);
+            connectServer(bitmap);
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
@@ -122,11 +98,10 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
-    void connectServer(String file){
+    void connectServer(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
