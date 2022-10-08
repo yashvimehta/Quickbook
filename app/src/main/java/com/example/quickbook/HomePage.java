@@ -4,9 +4,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -37,9 +39,10 @@ import okhttp3.Response;
 
 public class HomePage extends AppCompatActivity {
 
-    ImageView imageImageView, logoImageView, cameraImageView;
+    ImageView imageImageView, logoImageView, cameraImageView , galleryImageView;
     TextView messageTextView;
     public static final int CAMERA_REQUEST=100;
+    public static final int RESULT_LOAD_IMAGE = 150;
     public static final int CROP_PIC=200;
     private Uri picUri;
     ActivityResultLauncher<String> mgetContent;
@@ -49,6 +52,7 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         imageImageView = findViewById(R.id.imageImageView);
+        galleryImageView = findViewById(R.id.galleryImageView);
         imageImageView.setVisibility(View.INVISIBLE);
         logoImageView = findViewById(R.id.logoImageView);
         cameraImageView = findViewById(R.id.cameraImageView);
@@ -56,6 +60,11 @@ public class HomePage extends AppCompatActivity {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
+    }
+
+    public void openGallery(View view){
+        Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
 
     public void openCamera ( View view){
@@ -71,7 +80,7 @@ public class HomePage extends AppCompatActivity {
             imageImageView.setImageBitmap(bitmap);
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            File file = new File(directory, "UniqueFileName5" + ".jpg");
+            File file = new File(directory, "UniqueFileNameee" + ".jpg");
             if (!file.exists()) {
                 Log.d("path", file.toString());
                 FileOutputStream fos = null;
@@ -85,12 +94,26 @@ public class HomePage extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             logoImageView.setVisibility(View.INVISIBLE);
             imageImageView.setVisibility(View.VISIBLE);
             cameraImageView.setVisibility(View.INVISIBLE);
+            galleryImageView.setVisibility(View.INVISIBLE);
             messageTextView.setVisibility(View.INVISIBLE);
 
+        }
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            logoImageView.setVisibility(View.INVISIBLE);
+            imageImageView.setVisibility(View.VISIBLE);
+            cameraImageView.setVisibility(View.INVISIBLE);
+            galleryImageView.setVisibility(View.INVISIBLE);
+            messageTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -111,6 +134,7 @@ public class HomePage extends AppCompatActivity {
 
         postRequest(postUrl1, postBodyImage);
         postRequest(postUrl2, postBodyImage);
+        Log.i("connects", "");
 //        String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), bitmap, "Title", null);
 //        Uri uri= Uri.parse(path);
 //        ContextWrapper cw = new ContextWrapper(getApplicationContext());
