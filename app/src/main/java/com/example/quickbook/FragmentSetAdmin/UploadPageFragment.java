@@ -219,23 +219,20 @@ public class UploadPageFragment extends Fragment {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
             Uri tempUri = saveBitmapImage(getContext(), photo);
-
             CropImage.activity(tempUri)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setCropShape(CropImageView.CropShape.RECTANGLE)
-                    .setAspectRatio(1, 1)
                     .start(getContext(), this);
-
         }
 
         // Image from gallery
         if (requestCode == SELECT_FILE && resultCode == Activity.RESULT_OK) {
             Uri imageLocation = data.getData();
-
+            currentImageUri=imageLocation;
+            getPredictionsFromServer();
             CropImage.activity(imageLocation)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setCropShape(CropImageView.CropShape.RECTANGLE)
-                    .setAspectRatio(1, 1)
                     .start(getContext(), this);
 
             Log.i("WILL", "will call cropper");
