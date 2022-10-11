@@ -31,15 +31,23 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextEmail, editTextPasswordLogin;
 
 
+    public void launchHomeActivity() {
+        Intent intent = new Intent(MainActivity.this, HomePage.class);
 
+        startActivity(intent);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        firebaseAuth = FirebaseAuth.getInstance();
+//        if (firebaseAuth.getCurrentUser() != null) {
+//            launchHomeActivity();
+//        }
         editTextEmail = findViewById(R.id.editTextLogInEmailAddress);
         editTextPasswordLogin = findViewById(R.id.editTextLogInPassword);
-        firebaseAuth = FirebaseAuth.getInstance();
+
 
     }
 

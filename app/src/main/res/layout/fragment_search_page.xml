@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
+    tools:context=".HomePage">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/fetchingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fetching Data..."
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:visibility="invisible"
+            card_view:layout_constraintEnd_toEndOf="@+id/topTenListView"
+            card_view:layout_constraintStart_toStartOf="@+id/topTenListView"
+            card_view:layout_constraintTop_toBottomOf="@+id/recommendationProgressBar" />
+
+        <ProgressBar
+            android:id="@+id/recommendationProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:indeterminateTint="@android:color/white"
+            card_view:layout_constraintBottom_toBottomOf="@+id/topTenListView"
+            card_view:layout_constraintEnd_toEndOf="@+id/topTenListView"
+            card_view:layout_constraintStart_toStartOf="@+id/topTenListView"
+            card_view:layout_constraintTop_toTopOf="@+id/topTenListView" />
+
+        <ListView
+            android:id="@+id/topTenListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:divider="@color/transparent"
+            android:dividerHeight="5dp"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.0"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/textSearch"
+            card_view:layout_constraintVertical_bias="0.0">
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/textSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/dosis_semibold"
+            android:gravity="bottom"
+            android:text="Search Books"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.496"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="360dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="37dp"
+            android:background="@drawable/edittext_border"
+            android:backgroundTint="@color/white"
+            android:hint="Search"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.5"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
