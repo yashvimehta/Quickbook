@@ -98,7 +98,9 @@ public class UploadPageFragment extends Fragment {
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "recipease", null);
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, ts, null);
         return Uri.parse(path);
     }
 
@@ -216,7 +218,9 @@ public class UploadPageFragment extends Fragment {
 
         // Image using camera
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Log.i("12345",data.getExtras().toString());
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
 
             Uri tempUri = saveBitmapImage(getContext(), photo);
             CropImage.activity(tempUri)
@@ -228,8 +232,8 @@ public class UploadPageFragment extends Fragment {
         // Image from gallery
         if (requestCode == SELECT_FILE && resultCode == Activity.RESULT_OK) {
             Uri imageLocation = data.getData();
-            currentImageUri=imageLocation;
-            getPredictionsFromServer();
+//            currentImageUri=imageLocation;
+//            getPredictionsFromServer();
             CropImage.activity(imageLocation)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setCropShape(CropImageView.CropShape.RECTANGLE)
