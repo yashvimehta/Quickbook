@@ -20,6 +20,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.quickbook.ApiHelper.ApiInterface;
+import com.example.quickbook.ApiHelper.BFResult;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,14 +33,26 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+//import okhttp3.Call;
+//import okhttp3.Callback;
+//import okhttp3.MediaType;
+//import okhttp3.MultipartBody;
+//import okhttp3.OkHttpClient;
+//import okhttp3.Request;
+//import okhttp3.RequestBody;
+//import okhttp3.Response;
+//import retrofit2.Retrofit;
+//import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomePage extends AppCompatActivity {
 
@@ -141,69 +156,158 @@ public class HomePage extends AppCompatActivity {
     }
 
     void connectServer(Bitmap bitmap){
-        Uri tempUri = saveBitmapImage(HomePage.this, bitmap);
-        String filePath = getFilePathFromUri(tempUri);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
+//        Uri tempUri = saveBitmapImage(HomePage.this, bitmap);
+//        String filePath = getFilePathFromUri(tempUri);
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inPreferredConfig = Bitmap.Config.RGB_565;
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//        byte[] byteArray = stream.toByteArray();
+//
+//        final File file = new File(filePath);
+////        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+//        String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
+//        RequestBody postBodyImage = new MultipartBody.Builder()
+//                    .setType(MultipartBody.FORM)
+//                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
+//                    .build();
+//
+//        postRequest(postUrl1, postBodyImage);
+//        Log.i("connects", "");
 
-        final File file = new File(filePath);
+//        Uri tempUri = saveBitmapImage(HomePage.this, bitmap);
+//        String filePath = getFilePathFromUri(tempUri);
+//
+//        final File file = new File(filePath);
 //        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        String postUrl1= "http://20.219.149.149:5000/get_book_data_api";
-        RequestBody postBodyImage = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
+//        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(ApiInterface.BASE_URL_PREDICTOR)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+//        retrofit2.Call<RecogniseBookAndFace> mCall = apiInterface.sendImage(body);
+        try {
+
+            Uri tempUri = saveBitmapImage(HomePage.this, bitmap);
+            String filePath = getFilePathFromUri(tempUri);
+
+            final File file = new File(filePath);
+            final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .build();
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(ApiInterface.BASE_URL_PREDICTOR)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient)
                     .build();
 
-        postRequest(postUrl1, postBodyImage);
-        Log.i("connects", "");
+            ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+            //Call<FoodPredictorResult> mCall = apiInterface.sendImage(body);
+            //Call<IdentifyResult> mCall = apiInterface.sendImage(body);
+            Call<BFResult> mCall = apiInterface.sendImage(body);
+            mCall.enqueue(new Callback<BFResult>() {
+                @Override
+                public void onResponse(Call<BFResult> call, Response<BFResult> response) {
+                    BFResult mResult = response.body();
+                    if (mResult.getGeneralSuccess()) {
+                        Log.i("Success Checking", mResult.getName() + " "+mResult.getIsbn());
+
+                        String text = "Success";
+                        messageTextView.setText(text);
+
+
+
+                    } else {
+                        String text = "Failure";
+                        messageTextView.setText(text);
+
+                        Log.i("Success Checking", mResult.getBookError()+" "+mResult.getFaceError()+" "+mResult.getGeneralError());
+
+                    }
+
+                    messageTextView.setVisibility(View.VISIBLE);
+
+
+
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BFResult> call, Throwable t) {
+                    Log.i("Failure Checking", "There was an error " + t.getMessage());
+
+                    String text = "There was some error";
+                    messageTextView.setText(text);
+                    messageTextView.setVisibility(View.VISIBLE);
+
+                    if (file.exists()) {
+                        file.delete();
+                    }
+
+                }
+            });
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            String text = "There was some error";
+            messageTextView.setText(text);
+            messageTextView.setVisibility(View.VISIBLE);
+        }
     }
 
 
-    void postRequest(String postUrl, RequestBody postBody) {
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(postUrl)
-                .post(postBody)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                // Cancel the post on failure.
-                call.cancel();
-
-                // In order to access the TextView inside the UI thread, the code is executed inside runOnUiThread()
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i("Failed!", "could not send request");
-                        Log.i ("Failed", e.toString());
-
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-                // In order to access the TextView inside the UI thread, the code is executed inside runOnUiThread()
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i("Success!", "Sent request");
-                        try{
-                            Log.i("Success Response", response.body().string() );
-                        }
-                        catch(Exception e){
-                            Log.i("Exception", e.toString());
-                        }
-                    }
-                });
-            }
-        });
-    }
+//    void postRequest(String postUrl, RequestBody postBody) {
+//
+//        OkHttpClient client = new OkHttpClient();
+//        Request request = new Request.Builder()
+//                .url(postUrl)
+//                .post(postBody)
+//                .build();
+//
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                // Cancel the post on failure.
+//                call.cancel();
+//
+//                // In order to access the TextView inside the UI thread, the code is executed inside runOnUiThread()
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.i("Failed!", "could not send request");
+//                        Log.i ("Failed", e.toString());
+//
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, final Response response) throws IOException {
+//                // In order to access the TextView inside the UI thread, the code is executed inside runOnUiThread()
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.i("Success!", "Sent request");
+//                        try{
+//                            Log.i("Success Response", response.body().string() );
+//                        }
+//                        catch(Exception e){
+//                            Log.i("Exception", e.toString());
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//    }
 
 }
