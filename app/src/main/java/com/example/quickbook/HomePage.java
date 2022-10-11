@@ -71,6 +71,7 @@ public class HomePage extends AppCompatActivity {
 
     public void openCamera ( View view){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         startActivityForResult(intent, CAMERA_REQUEST);
     }
 
