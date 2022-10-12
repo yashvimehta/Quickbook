@@ -154,7 +154,7 @@ public class UploadPageFragment extends Fragment {
                     if (mResult.getGeneralSuccess()) {
                         Log.i("Success Checking", mResult.getName() + " "+mResult.getIsbn());
 
-                        String text = "Member:"+mResult.getName()+"\nISBN:"+mResult.getIsbn()+"\nTitle:"+mResult.getTitle();
+                        String text = "Member: "+mResult.getName()+"\nISBN: "+mResult.getIsbn()+"\nTitle: "+mResult.getTitle() ;
 
                         messageTextView.setText(text);
 
