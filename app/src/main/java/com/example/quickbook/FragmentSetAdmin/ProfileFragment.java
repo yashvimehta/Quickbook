@@ -106,7 +106,8 @@ public class ProfileFragment extends Fragment {
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, ts, null);
+        String memberid=nameInputText.getText().toString();
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, ts+"_"+memberid, null);
         return Uri.parse(path);
     }
 

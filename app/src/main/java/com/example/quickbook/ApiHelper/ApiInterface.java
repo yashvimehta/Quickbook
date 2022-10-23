@@ -32,6 +32,6 @@ public interface ApiInterface {
 
     @Multipart
     @POST("register")
-    Call<RegisterResult> sendImageandName(@Part MultipartBody.Part image, @Part String name);
+    Call<RegisterResult> sendImageandName(@Part MultipartBody.Part image);
 }
 
