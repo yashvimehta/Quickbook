@@ -29,5 +29,9 @@ public interface ApiInterface {
     @Multipart
     @POST("bookandface")
     Call<BFResult> sendImage(@Part MultipartBody.Part image);
+
+    @Multipart
+    @POST("register")
+    Call<RegisterResult> sendImageandName(@Part MultipartBody.Part image, @Part String name);
 }
 
