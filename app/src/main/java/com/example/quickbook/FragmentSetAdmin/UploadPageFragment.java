@@ -70,12 +70,6 @@ public class UploadPageFragment extends Fragment {
     TextInputLayout isbnTextInputLayout;
     EditText isbnInputText;
 
-    static int LEN_CLASSES;
-    ArrayList<String> CLASSES;
-    ArrayList<String> predictedSubTypes;
-    boolean subTypesReady = false;
-
-    boolean predicted = false;
     @SuppressLint("StaticFieldLeak")
     static ProgressBar progressBar;
 
@@ -153,8 +147,6 @@ public class UploadPageFragment extends Fragment {
                     .build();
 
             ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-            //Call<FoodPredictorResult> mCall = apiInterface.sendImage(body);
-            //Call<IdentifyResult> mCall = apiInterface.sendImage(body);
             Call<BFResult> mCall = apiInterface.sendImage(body);
             mCall.enqueue(new Callback<BFResult>() {
                 @Override
@@ -163,8 +155,6 @@ public class UploadPageFragment extends Fragment {
                     if (mResult.getGeneralSuccess()) {
                         Log.i("Success Checking", mResult.getName() + " "+mResult.getIsbn());
 
-                        //String text = "Member: "+mResult.getName()+"\nISBN: "+mResult.getIsbn()+"\nTitle: "+mResult.getTitle() ;
-                        //messageTextView.setText(text);
                         messageTextView.setVisibility(View.INVISIBLE);
                         nameInputText.setText(mResult.getName());
                         isbnInputText.setText(mResult.getIsbn());
@@ -173,8 +163,6 @@ public class UploadPageFragment extends Fragment {
                         isbnTextInputLayout.setVisibility(View.VISIBLE);
                         titleTextInputLayout.setVisibility(View.VISIBLE);
 
-                        //getSubTypes(mResult.getCategory());
-                        //gotoResultButton.setText(mResult.getCategory());
                         gotoResultButton.setVisibility(View.VISIBLE);
                         retryButton.setVisibility(View.INVISIBLE);
 
@@ -182,6 +170,12 @@ public class UploadPageFragment extends Fragment {
                         String text = "Failure";
                         messageTextView.setText(text);
                         messageTextView.setVisibility(View.VISIBLE);
+                        nameTextInputLayout.setVisibility(View.INVISIBLE);
+                        nameInputText.setText("na");
+                        isbnTextInputLayout.setVisibility(View.INVISIBLE);
+                        isbnInputText.setText("na");
+                        titleTextInputLayout.setVisibility(View.INVISIBLE);
+                        titleInputText.setText("na");
                         Log.i("Success Checking", mResult.getBookError()+" "+mResult.getFaceError()+" "+mResult.getGeneralError());
 
                     }
@@ -203,6 +197,12 @@ public class UploadPageFragment extends Fragment {
                     String text = "There was some error";
                     messageTextView.setText(text);
                     messageTextView.setVisibility(View.VISIBLE);
+                    nameTextInputLayout.setVisibility(View.INVISIBLE);
+                    nameInputText.setText("na");
+                    isbnTextInputLayout.setVisibility(View.INVISIBLE);
+                    isbnInputText.setText("na");
+                    titleTextInputLayout.setVisibility(View.INVISIBLE);
+                    titleInputText.setText("na");
                     progressBar.setVisibility(View.INVISIBLE);
 
                     retryButton.setVisibility(View.VISIBLE);
@@ -273,8 +273,6 @@ public class UploadPageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upload_page, container, false);
-
-        predictedSubTypes = new ArrayList<>();
         messageTextView = view.findViewById(R.id.messageTextView);
 
         retryButton = view.findViewById(R.id.buttonDetect);
@@ -328,12 +326,51 @@ public class UploadPageFragment extends Fragment {
 
             }
         });
+        gotoResultButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name=nameInputText.getText().toString();
+                String isbn=isbnInputText.getText().toString();
+                String title=titleInputText.getText().toString();
+                if (name.equals("na")){
+                    Toast.makeText(getContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                else if(isbn.equals("na")){
+                    Toast.makeText(getContext(), "ISBN cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                else if(title.equals("na")){
+                    Toast.makeText(getContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    messageTextView.setText("Select or click an Image");
+                    messageTextView.setVisibility(View.VISIBLE);
+                    nameTextInputLayout.setVisibility(View.INVISIBLE);
+                    nameInputText.setText("na");
+                    isbnTextInputLayout.setVisibility(View.INVISIBLE);
+                    isbnInputText.setText("na");
+                    titleTextInputLayout.setVisibility(View.INVISIBLE);
+                    titleInputText.setText("na");
+                    gotoResultButton.setVisibility(View.INVISIBLE);
+                    retryButton.setVisibility(View.INVISIBLE);
+                    imageView.setImageResource(R.drawable.logo);
+                    //TODO:Add in firebase
+                    Toast.makeText(getContext(), "Book issued successfully!", Toast.LENGTH_SHORT).show();
 
+                }
+            }
+        });
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getPredictionsFromServer();
-
+                messageTextView.setText("Select or click an Image");
+                messageTextView.setVisibility(View.VISIBLE);
+                nameTextInputLayout.setVisibility(View.INVISIBLE);
+                nameInputText.setText("na");
+                isbnTextInputLayout.setVisibility(View.INVISIBLE);
+                isbnInputText.setText("na");
+                titleTextInputLayout.setVisibility(View.INVISIBLE);
+                titleInputText.setText("na");
                 retryButton.setVisibility(View.INVISIBLE);
 
             }
