@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.BFResult;
 import com.example.quickbook.HomePage;
 import com.example.quickbook.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -60,6 +62,13 @@ public class UploadPageFragment extends Fragment {
     TextView messageTextView;
     Button retryButton, gotoResultButton;
     Uri currentImageUri;
+
+    TextInputLayout titleTextInputLayout;
+    EditText titleInputText;
+    TextInputLayout nameTextInputLayout;
+    EditText nameInputText;
+    TextInputLayout isbnTextInputLayout;
+    EditText isbnInputText;
 
     static int LEN_CLASSES;
     ArrayList<String> CLASSES;
@@ -154,9 +163,15 @@ public class UploadPageFragment extends Fragment {
                     if (mResult.getGeneralSuccess()) {
                         Log.i("Success Checking", mResult.getName() + " "+mResult.getIsbn());
 
-                        String text = "Member: "+mResult.getName()+"\nISBN: "+mResult.getIsbn()+"\nTitle: "+mResult.getTitle() ;
-
-                        messageTextView.setText(text);
+                        //String text = "Member: "+mResult.getName()+"\nISBN: "+mResult.getIsbn()+"\nTitle: "+mResult.getTitle() ;
+                        //messageTextView.setText(text);
+                        messageTextView.setVisibility(View.INVISIBLE);
+                        nameInputText.setText(mResult.getName());
+                        isbnInputText.setText(mResult.getIsbn());
+                        titleInputText.setText(mResult.getTitle());
+                        nameTextInputLayout.setVisibility(View.VISIBLE);
+                        isbnTextInputLayout.setVisibility(View.VISIBLE);
+                        titleTextInputLayout.setVisibility(View.VISIBLE);
 
                         //getSubTypes(mResult.getCategory());
                         //gotoResultButton.setText(mResult.getCategory());
@@ -166,12 +181,12 @@ public class UploadPageFragment extends Fragment {
                     } else {
                         String text = "Failure";
                         messageTextView.setText(text);
-
+                        messageTextView.setVisibility(View.VISIBLE);
                         Log.i("Success Checking", mResult.getBookError()+" "+mResult.getFaceError()+" "+mResult.getGeneralError());
 
                     }
 
-                    messageTextView.setVisibility(View.VISIBLE);
+
                     progressBar.setVisibility(View.INVISIBLE);
 
 
@@ -266,6 +281,13 @@ public class UploadPageFragment extends Fragment {
         gotoResultButton = view.findViewById(R.id.gotoResultButton);
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+
+        titleTextInputLayout=view.findViewById(R.id.titleTextInputLayout);
+        titleInputText=view.findViewById(R.id.titleInputText);
+        isbnTextInputLayout=view.findViewById(R.id.isbnTextInputLayout);
+        isbnInputText=view.findViewById(R.id.isbnInputText);
+        nameTextInputLayout=view.findViewById(R.id.nameTextInputLayout);
+        nameInputText=view.findViewById(R.id.nameInputText);
 
 
         imageView = view.findViewById(R.id.imageViewSelectImage);

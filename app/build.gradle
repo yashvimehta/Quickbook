@@ -60,7 +60,6 @@ dependencies {
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
-
     implementation 'com.github.krokyze:ucropnedit:2.2.6-2'
 
     //for connection to flask app

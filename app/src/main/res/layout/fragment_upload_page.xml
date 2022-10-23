@@ -10,13 +10,13 @@
 
     <ImageView
         android:id="@+id/imageViewSelectImage"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructionsTextView"
         app:srcCompat="@drawable/logo" />
 
     <Button
@@ -25,7 +25,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/custom_button"
         android:text="Retry"
         android:textColor="#FFFFFF"
@@ -40,7 +40,7 @@
         android:id="@+id/imageViewCamera"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/imageViewGallery"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
         android:id="@+id/imageViewGallery"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageViewCamera"
@@ -63,13 +63,13 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:visibility="invisible"
+        android:layout_marginTop="16dp"
         android:indeterminateTint="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/buttonDetect"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout" />
 
     <Button
         android:id="@+id/gotoResultButton"
@@ -77,7 +77,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/custom_button"
         android:text="Issue book"
         android:textColor="#FFFFFF"
@@ -92,13 +92,125 @@
         android:id="@+id/messageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="32dp"
         android:text="Select or click an Image"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonDetect"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout" />
+
+    <TextView
+        android:id="@+id/instructionsTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:text="Make sure:\n1. Full face is clearly visible.\n2.ISBN of book is clearly visible."
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:background="@drawable/edittext_border"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFFFF"
+        android:visibility="invisible"
+        app:boxBackgroundMode="none"
+        app:hintTextColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCamera">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nameInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="Member ID"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/isbnTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:background="@drawable/edittext_border"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFFFF"
+        android:visibility="invisible"
+        app:boxBackgroundMode="none"
+        app:hintTextColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isbnInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="ISBN"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/titleTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edittext_border"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFFFF"
+        android:visibility="invisible"
+        app:boxBackgroundMode="none"
+        app:boxStrokeColor="@null"
+        app:boxStrokeWidth="0dp"
+        app:hintTextColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isbnTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/titleInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="Title"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFFFF" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
