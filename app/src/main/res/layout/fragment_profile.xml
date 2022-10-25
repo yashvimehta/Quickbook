@@ -8,32 +8,30 @@
     android:background="@drawable/background_gradient">
 
 
+    <TextView
+        android:id="@+id/instructionsTextView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:text="Make sure:\n1. Full face is clearly visible."
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageViewSelectImage"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/logo"
-        tools:layout_editor_absoluteY="83dp" />
-
-    <Button
-        android:id="@+id/buttonDetect"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/custom_button"
-        android:text="Retry"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/instructionsTextView2"
+        app:srcCompat="@drawable/logo" />
 
     <ImageView
         android:id="@+id/imageViewCamera"
@@ -71,14 +69,14 @@
         app:layout_constraintTop_toBottomOf="@+id/nameTextInputLayout" />
 
     <Button
-        android:id="@+id/gotoResultButton"
+        android:id="@+id/RegisterButton"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/custom_button"
-        android:text="Issue book"
+        android:text="Register Member"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:visibility="invisible"
@@ -129,7 +127,8 @@
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
             android:paddingRight="5dp"
-            android:paddingBottom="5dp" />
+            android:paddingBottom="5dp"
+            android:text="na" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

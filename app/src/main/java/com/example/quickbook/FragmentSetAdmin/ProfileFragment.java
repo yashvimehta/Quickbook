@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.BFResult;
+import com.example.quickbook.ApiHelper.RegisterResult;
 import com.example.quickbook.HomePage;
 import com.example.quickbook.R;
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,6 +37,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -61,18 +63,12 @@ public class ProfileFragment extends Fragment {
     Bitmap bitmap;
     ImageView imageView;
     TextView messageTextView;
-    Button retryButton, gotoResultButton;
+    Button registerButton;
     Uri currentImageUri;
 
     TextInputLayout nameTextInputLayout;
     EditText nameInputText;
 
-    static int LEN_CLASSES;
-    ArrayList<String> CLASSES;
-    ArrayList<String> predictedSubTypes;
-    boolean subTypesReady = false;
-
-    boolean predicted = false;
     @SuppressLint("StaticFieldLeak")
     static ProgressBar progressBar;
 
@@ -129,10 +125,10 @@ public class ProfileFragment extends Fragment {
     public void getPredictionsFromServer() {
         progressBar.setVisibility(View.VISIBLE);
         messageTextView.setVisibility(View.INVISIBLE);
-
+        registerButton.setVisibility(View.INVISIBLE);
         try {
             Bitmap photo = MediaStore.Images.Media.getBitmap(HomePage.contextOfApplication.getContentResolver(), currentImageUri);
-            imageView.setImageBitmap(photo);
+//            imageView.setImageBitmap(photo);
 
             Uri tempUri = saveBitmapImage(getContext(), photo);
             String filePath = getFilePathFromUri(tempUri);
@@ -151,31 +147,23 @@ public class ProfileFragment extends Fragment {
                     .build();
 
             ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-            //Call<FoodPredictorResult> mCall = apiInterface.sendImage(body);
-            //Call<IdentifyResult> mCall = apiInterface.sendImage(body);
-            Call<BFResult> mCall = apiInterface.sendImage(body);
-            mCall.enqueue(new Callback<BFResult>() {
+            Call<RegisterResult> mCall = apiInterface.sendImageandName(body);
+            mCall.enqueue(new Callback<RegisterResult>() {
                 @Override
-                public void onResponse(Call<BFResult> call, Response<BFResult> response) {
-                    BFResult mResult = response.body();
-                    if (mResult.getGeneralSuccess()) {
-                        Log.i("Success Checking", mResult.getName() + " "+mResult.getIsbn());
-
-                        messageTextView.setText("Success");
-                        messageTextView.setVisibility(View.VISIBLE);
-                        nameInputText.setText(mResult.getName());
-                        //getSubTypes(mResult.getCategory());
-                        //gotoResultButton.setText(mResult.getCategory());
-                        gotoResultButton.setVisibility(View.VISIBLE);
-                        retryButton.setVisibility(View.INVISIBLE);
-
+                public void onResponse(Call<RegisterResult> call, Response<RegisterResult> response) {
+                    RegisterResult mResult = response.body();
+                    if (mResult.getSuccess()) {
+                        Log.i("Success Checking", "success");
+                        Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
+                       nameInputText.setText("na");
+                        imageView.setImageResource(R.drawable.logo);
                     } else {
-                        String text = "Failure";
-                        messageTextView.setText(text);
+                        Toast.makeText(getContext(), "There was some error. Please retry", Toast.LENGTH_SHORT).show();
 
-                        Log.i("Success Checking", mResult.getBookError()+" "+mResult.getFaceError()+" "+mResult.getGeneralError());
+                        Log.i("Success Checking",  ""+mResult.getError());
 
                     }
+                    registerButton.setVisibility(View.INVISIBLE);
                     messageTextView.setVisibility(View.VISIBLE);
 
                     progressBar.setVisibility(View.INVISIBLE);
@@ -188,15 +176,12 @@ public class ProfileFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<BFResult> call, Throwable t) {
+                public void onFailure(Call<RegisterResult> call, Throwable t) {
                     Log.i("Failure Checking", "There was an error " + t.getMessage());
-
-                    String text = "There was some error";
-                    messageTextView.setText(text);
                     messageTextView.setVisibility(View.VISIBLE);
+                    registerButton.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
 
-                    retryButton.setVisibility(View.VISIBLE);
 
                     if (file.exists()) {
                         file.delete();
@@ -209,12 +194,10 @@ public class ProfileFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
 
-            String text = "There was some error";
-            messageTextView.setText(text);
             messageTextView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 
-            retryButton.setVisibility(View.VISIBLE);
+            registerButton.setVisibility(View.VISIBLE);
         }
 
     }
@@ -255,7 +238,15 @@ public class ProfileFragment extends Fragment {
             currentImageUri = result.getUri();
             Log.i("IMG CROPPER", "In cropper");
 
-            getPredictionsFromServer();
+            try {
+                Bitmap photo = MediaStore.Images.Media.getBitmap(HomePage.contextOfApplication.getContentResolver(), currentImageUri);
+                imageView.setImageBitmap(photo);
+                registerButton.setVisibility(View.VISIBLE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //getPredictionsFromServer();
 
         }
     }
@@ -263,13 +254,11 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_upload_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        predictedSubTypes = new ArrayList<>();
         messageTextView = view.findViewById(R.id.messageTextView);
 
-        retryButton = view.findViewById(R.id.buttonDetect);
-        gotoResultButton = view.findViewById(R.id.gotoResultButton);
+        registerButton = view.findViewById(R.id.RegisterButton);
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -283,9 +272,7 @@ public class ProfileFragment extends Fragment {
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                retryButton.setVisibility(View.INVISIBLE);
-
-                gotoResultButton.setVisibility(View.INVISIBLE);
+                registerButton.setVisibility(View.INVISIBLE);
 
                 if (HomePage.contextOfApplication.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
@@ -301,9 +288,8 @@ public class ProfileFragment extends Fragment {
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                retryButton.setVisibility(View.INVISIBLE);
 
-                gotoResultButton.setVisibility(View.INVISIBLE);
+                registerButton.setVisibility(View.INVISIBLE);
 
                 if (HomePage.contextOfApplication.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_REQUEST);
@@ -315,14 +301,17 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-
-        retryButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                getPredictionsFromServer();
-
-                retryButton.setVisibility(View.INVISIBLE);
-
+            public void onClick(View view) {
+                String memberId=nameInputText.getText().toString();
+                if (memberId.equals("na")){
+                    Toast.makeText(getContext(), "Member ID cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                //TODO: Check if member id already exists
+                else{
+                    getPredictionsFromServer();
+                }
             }
         });
 
