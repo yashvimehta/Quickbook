@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quickbook.ApiHelper.ApiInterface;
-import com.example.quickbook.ApiHelper.BFResult;
 import com.example.quickbook.ApiHelper.RegisterResult;
 import com.example.quickbook.HomePage;
 import com.example.quickbook.R;
@@ -38,7 +37,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -155,14 +153,14 @@ public class ProfileFragment extends Fragment {
                     if (mResult.getSuccess()) {
                         Log.i("Success Checking", "success");
                         Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
-                       nameInputText.setText("na");
-                        imageView.setImageResource(R.drawable.logo);
+                        nameInputText.setText("na");
                     } else {
                         Toast.makeText(getContext(), "There was some error. Please retry", Toast.LENGTH_SHORT).show();
 
                         Log.i("Success Checking",  ""+mResult.getError());
 
                     }
+                    imageView.setImageResource(R.drawable.logo);
                     registerButton.setVisibility(View.INVISIBLE);
                     messageTextView.setVisibility(View.VISIBLE);
 
@@ -263,7 +261,7 @@ public class ProfileFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
 
         nameTextInputLayout=view.findViewById(R.id.nameTextInputLayout);
-        nameInputText=view.findViewById(R.id.nameInputText);
+        nameInputText=view.findViewById(R.id.issueDurationInputText);
 
 
         imageView = view.findViewById(R.id.imageViewSelectImage);

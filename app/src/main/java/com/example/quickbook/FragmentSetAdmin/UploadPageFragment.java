@@ -37,7 +37,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -285,7 +284,7 @@ public class UploadPageFragment extends Fragment {
         isbnTextInputLayout=view.findViewById(R.id.isbnTextInputLayout);
         isbnInputText=view.findViewById(R.id.isbnInputText);
         nameTextInputLayout=view.findViewById(R.id.nameTextInputLayout);
-        nameInputText=view.findViewById(R.id.nameInputText);
+        nameInputText=view.findViewById(R.id.issueDurationInputText);
 
 
         imageView = view.findViewById(R.id.imageViewSelectImage);

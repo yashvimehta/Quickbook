@@ -136,7 +136,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageViewCamera">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nameInputText"
+            android:id="@+id/issueDurationInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
