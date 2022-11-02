@@ -13,6 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/custom_button"
+            android:text="Search"
+            android:textColor="#FFFFFF"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent" />
+
         <TextView
             android:id="@+id/fetchingTextView"
             android:layout_width="wrap_content"
@@ -39,8 +53,8 @@
 
         <ListView
             android:id="@+id/topTenListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="374dp"
+            android:layout_height="508dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
@@ -51,44 +65,43 @@
             android:scrollbars="none"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/textSearch"
-            card_view:layout_constraintVertical_bias="0.0">
+            card_view:layout_constraintVertical_bias="0.072">
 
         </ListView>
+
+        <EditText
+            android:id="@+id/bookNameEditText"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/edittext_border"
+            android:ems="10"
+            android:hint="Book name"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFFFF"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/dosis_semibold"
             android:gravity="bottom"
             android:text="Search Books"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.496"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView" />
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
-            android:layout_width="360dp"
-            android:layout_height="54dp"
-            android:layout_marginTop="37dp"
-            android:background="@drawable/edittext_border"
-            android:backgroundTint="@color/white"
-            android:hint="Search"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.5"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            card_view:layout_constraintTop_toBottomOf="@+id/bookNameEditText" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

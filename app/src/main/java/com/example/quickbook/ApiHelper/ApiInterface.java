@@ -1,5 +1,7 @@
 package com.example.quickbook.ApiHelper;
 
+import android.app.appsearch.SearchResult;
+
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -32,5 +34,8 @@ public interface ApiInterface {
     @Multipart
     @POST("register")
     Call<RegisterResult> sendImageandName(@Part MultipartBody.Part image);
+
+    @GET("search")
+    Call<SearchBookResult> getSearchBookResult(@Query("title") String title);
 }
 
