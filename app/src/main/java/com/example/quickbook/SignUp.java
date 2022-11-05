@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +34,8 @@ public class SignUp extends AppCompatActivity {
 
     TextView textViewToggle;
     Button buttonLogin, buttonSignup;
-    EditText editTextName, editTextEmail, editTextSignUpPassword,  editTextSignUpConfirmPassword;
+    EditText editTextName, editTextEmail, editTextSignUpPassword,  editTextSignUpConfirmPassword , editTextSignUpName,
+            editTextSignUpPhone;
 
 
 
@@ -45,6 +48,8 @@ public class SignUp extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editTextSignUpEmailAddress);
         editTextSignUpPassword = findViewById(R.id.editTextSignUpPassword);
         editTextSignUpConfirmPassword = findViewById(R.id.editTextSignUpConfirmPassword);
+        editTextSignUpName = findViewById(R.id.editTextSignUpName);
+        editTextSignUpPhone = findViewById(R.id.editTextSignUpPhone);
 
         firebaseAuth = FirebaseAuth.getInstance();
     }
@@ -62,6 +67,8 @@ public class SignUp extends AppCompatActivity {
         final String email = editTextEmail.getText().toString();
         String password = editTextSignUpPassword.getText().toString();
         String passwordAgain = editTextSignUpConfirmPassword.getText().toString();
+        String name = editTextSignUpName.getText().toString();
+        String phone = editTextSignUpPhone.getText().toString();
 
         Log.i("SIGN IN", email + " " + password + " " + passwordAgain);
         if (email.equals("") || password.equals("") || passwordAgain.equals("")) {
@@ -78,9 +85,31 @@ public class SignUp extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
 
-                                Intent intent = new Intent(SignUp.this, HomePage.class);
-                                startActivity(intent);
-                                finish();
+                                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                Map<String, Object> mMap = new HashMap<>();
+                                mMap.put("email", email);
+                                mMap.put("Phone Number", phone);
+                                mMap.put("collegeName", "SPIT");
+                                mMap.put("issuedBooks", new ArrayList<String>());
+                                mMap.put("memberID", "");
+                                mMap.put("Name", name );
+                                mMap.put("photo", "");
+                                mMap.put("user_choice", new ArrayList<>(Collections.nCopies(127, 0)));
+
+
+                                assert user != null;
+                                db.collection("Users").document(user.getUid()).set(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Intent intent = new Intent(SignUp.this, HomePage.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    }
+                                });
 
                             } else {
                                 Log.i("FAIL", "Sign Up failed " + task.getException());

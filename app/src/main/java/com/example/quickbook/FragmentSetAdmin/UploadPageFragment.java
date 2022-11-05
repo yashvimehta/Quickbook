@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -31,12 +32,23 @@ import com.example.quickbook.ApiHelper.BFResult;
 import com.example.quickbook.HomePage;
 import com.example.quickbook.R;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -55,6 +67,8 @@ public class UploadPageFragment extends Fragment {
     private static final int STORAGE_REQUEST = 7;
     private static final int SELECT_FILE = 8;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
+    String isbnNumber;
 
     Bitmap bitmap;
     ImageView imageView;
@@ -151,6 +165,7 @@ public class UploadPageFragment extends Fragment {
                 @Override
                 public void onResponse(Call<BFResult> call, Response<BFResult> response) {
                     BFResult mResult = response.body();
+                    isbnNumber = mResult.getIsbn();
                     if (mResult.getGeneralSuccess()) {
                         Log.i("Success Checking", mResult.getName() + " "+mResult.getIsbn());
 
@@ -271,6 +286,13 @@ public class UploadPageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        assert mUser != null;
+        DocumentReference mDocumentReference = db.collection("Users").document(mUser.getUid());
+
         View view = inflater.inflate(R.layout.fragment_upload_page, container, false);
         messageTextView = view.findViewById(R.id.messageTextView);
 
@@ -352,9 +374,25 @@ public class UploadPageFragment extends Fragment {
                     gotoResultButton.setVisibility(View.INVISIBLE);
                     retryButton.setVisibility(View.INVISIBLE);
                     imageView.setImageResource(R.drawable.logo);
-                    //TODO:Add in firebase
-                    Toast.makeText(getContext(), "Book issued successfully!", Toast.LENGTH_SHORT).show();
 
+                    mDocumentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (error == null) {
+                                if (value != null && value.exists()) {
+
+                                    ArrayList<String> issuedBooks = (ArrayList<String>) Objects.requireNonNull(value.get("issuedBooks"));
+                                    issuedBooks.add(isbnNumber);
+                                } else {
+                                    Log.i("RES", "Data is NULL");
+                                }
+
+                            } else {
+                                Log.i("ERR", error.toString());
+                            }
+                        }
+                    });
+                    Toast.makeText(getContext(), "Book issued successfully!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
