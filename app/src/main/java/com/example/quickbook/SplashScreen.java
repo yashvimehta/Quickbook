@@ -22,7 +22,11 @@ public class SplashScreen extends AppCompatActivity {
                 }
                 catch (InterruptedException e)
                 {
-                    // TODO: handle exception
+                    Intent i = new Intent(SplashScreen.this, SplashScreen.class);
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(i);
+                    overridePendingTransition(0, 0);
                     e.printStackTrace();
                 }
                 finally
