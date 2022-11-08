@@ -84,7 +84,7 @@ public class SearchPageFragment extends Fragment {
                                     Log.i("Success Checking", "success");
                                     HashMap<String, String> trial = (HashMap<String, String>) mResult.getAnswer().get(0);
                                     Log.i("Success Checking pt2", "Title: " + trial.get("title"));
-                                    //TODO Add Card
+                                    //TODO Add Card malhar
                                 } else {
                                     Log.i("Success Checking", "" + mResult.getError());
                                 }

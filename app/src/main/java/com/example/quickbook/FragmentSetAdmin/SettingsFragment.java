@@ -37,6 +37,7 @@ public class SettingsFragment extends Fragment {
         fineInputText=view.findViewById(R.id.fineInputText);
         confirmRulesButton=view.findViewById(R.id.confirmRulesButton);
         //TODO set above input text values from db
+        //fetch from db
 
         emailInputText=view.findViewById(R.id.emailInputText);
         pwdInputText=view.findViewById(R.id.pwdInputText);
