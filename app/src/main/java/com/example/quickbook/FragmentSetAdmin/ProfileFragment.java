@@ -167,6 +167,10 @@ public class ProfileFragment extends Fragment {
                     if (mResult.getSuccess()) {
                         Log.i("Success Checking", "success");
                         Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
+
+
+
+
                         nameInputText.setText("na");
                     } else {
                         Toast.makeText(getContext(), "There was some error. Please retry", Toast.LENGTH_SHORT).show();
@@ -317,6 +321,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String memberId=nameInputText.getText().toString();
+                String email1 = "yashvi.mehta@spit.ac.in";
                 if (memberId.equals("na")){
                     Toast.makeText(getContext(), "Member ID cannot be empty", Toast.LENGTH_SHORT).show();
                 }
@@ -331,7 +336,8 @@ public class ProfileFragment extends Fragment {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String id = String.valueOf(document.getData().get("memberID"));
-                                        if(id.equals(memberId)){
+                                        String email = String.valueOf(document.getData().get("email"));
+                                        if(id.equals(memberId) || email.equals(email1)){
                                             val++;
                                         }
                                     }
@@ -339,7 +345,7 @@ public class ProfileFragment extends Fragment {
                                         getPredictionsFromServer();
                                     }
                                     else{
-                                        Toast.makeText(getContext(), "Member ID already exists", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Member ID/Email already exists", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());

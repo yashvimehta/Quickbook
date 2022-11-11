@@ -118,6 +118,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewCamera">
 
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/issueDurationInputText"
             android:layout_width="match_parent"
@@ -129,6 +130,7 @@
             android:paddingRight="5dp"
             android:paddingBottom="5dp"
             android:text="na" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
