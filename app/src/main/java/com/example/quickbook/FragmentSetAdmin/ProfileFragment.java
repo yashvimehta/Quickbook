@@ -1,4 +1,6 @@
 package com.example.quickbook.FragmentSetAdmin;
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.work.ListenableWorker;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -29,7 +32,14 @@ import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.RegisterResult;
 import com.example.quickbook.HomePage;
 import com.example.quickbook.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -38,6 +48,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -48,6 +60,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import androidx.work.ListenableWorker.Result;
 
 
 
@@ -306,14 +320,39 @@ public class ProfileFragment extends Fragment {
                 if (memberId.equals("na")){
                     Toast.makeText(getContext(), "Member ID cannot be empty", Toast.LENGTH_SHORT).show();
                 }
-                //TODO: Check if member id already exists
-                else{
-                    getPredictionsFromServer();
-                }
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                db.collection("Users")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                int val = 0;
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String id = String.valueOf(document.getData().get("memberID"));
+                                        if(id.equals(memberId)){
+                                            val++;
+                                        }
+                                    }
+                                    if(val==0){
+                                        getPredictionsFromServer();
+                                    }
+                                    else{
+                                        Toast.makeText(getContext(), "Member ID already exists", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
             }
         });
 
         return view;
+    }
+    public boolean checkMemberID(String memberId){
+        return true;
     }
 
 }
