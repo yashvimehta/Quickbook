@@ -32,9 +32,13 @@ import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.RegisterResult;
 import com.example.quickbook.HomePage;
 import com.example.quickbook.R;
+import com.example.quickbook.SignUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +51,10 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -71,6 +79,8 @@ public class ProfileFragment extends Fragment {
     private static final int STORAGE_REQUEST = 7;
     private static final int SELECT_FILE = 8;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
+    FirebaseAuth firebaseAuth;
 
     Bitmap bitmap;
     ImageView imageView;
@@ -166,11 +176,46 @@ public class ProfileFragment extends Fragment {
                     RegisterResult mResult = response.body();
                     if (mResult.getSuccess()) {
                         Log.i("Success Checking", "success");
-                        Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
 
-
-
-
+//                        String memberId = nameInputText.getText().toString();
+//                        String email = "new.email@spit.ac.in";
+//                        firebaseAuth.createUserWithEmailAndPassword(email, memberId)
+//                                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<AuthResult> task) {
+//
+//                                        if (task.isSuccessful()) {
+//
+//                                            FirebaseUser user = firebaseAuth.getCurrentUser();
+//
+//                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                                            Map<String, Object> mMap = new HashMap<>();
+//                                            mMap.put("email", email);
+//                                            mMap.put("memberId", memberId);
+//                                            mMap.put("password", memberId);
+//                                            mMap.put("issuedBooks", new ArrayList<String>());
+//                                            mMap.put("Name", "name" );
+//
+//
+//                                            assert user != null;
+//                                            db.collection("Users").document(user.getUid()).set(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    if (task.isSuccessful()) {
+//                                                        Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
+//                                                    }
+//                                                    else{
+//                                                        Log.i("FAIL", "Sign Up failed " + task.getException());
+//                                                        Toast.makeText(ProfileFragment.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                                    }
+//                                                }
+//                                            });
+//
+//                                        } else {
+//                                            Log.i("FAIL", "Sign Up failed " + task.getException());
+//                                        }
+//                                    }
+//                                });
                         nameInputText.setText("na");
                     } else {
                         Toast.makeText(getContext(), "There was some error. Please retry", Toast.LENGTH_SHORT).show();
@@ -270,6 +315,8 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        firebaseAuth = FirebaseAuth.getInstance();
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         messageTextView = view.findViewById(R.id.messageTextView);
