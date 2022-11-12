@@ -11,18 +11,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.SearchBookResult;
 import com.example.quickbook.R;
+import com.example.quickbook.SearchCardAdapter;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +49,8 @@ public class SearchPageFragment extends Fragment {
 
     FrameLayout frameLayout;
     Button searchButton;
-
+    SearchCardAdapter mCustomCardAdapter;
+    ListView booksListView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_search_page, container, false);
@@ -54,7 +59,7 @@ public class SearchPageFragment extends Fragment {
         text = (TextView) view.findViewById(R.id.textSearch);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame);
         searchButton=view.findViewById(R.id.searchButton);
-
+        booksListView=view.findViewById(R.id.booksListView);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,10 +86,22 @@ public class SearchPageFragment extends Fragment {
                             public void onResponse(Call<SearchBookResult> call, Response<SearchBookResult> response) {
                                 SearchBookResult mResult = response.body();
                                 if (mResult.getSuccess()) {
-                                    Log.i("Success Checking", "success");
-                                    HashMap<String, String> trial = (HashMap<String, String>) mResult.getAnswer().get(0);
-                                    Log.i("Success Checking pt2", "Title: " + trial.get("title"));
-                                    //TODO Add Card malhar
+                                    int length=mResult.getAnswer().size();
+                                    ArrayList<String[]> cardArrayList=new ArrayList<String[]>();
+                                    for(int i=0;i<length;i++){
+                                        HashMap<String, String> record = (HashMap<String, String>) mResult.getAnswer().get(i);
+                                        cardArrayList.add(new String[]{record.get("title"),record.get("authors"),record.get("publisher"),record.get("publishedDate"),record.get("description"),record.get("thumbnail"),record.get("ISBN")});
+                                    }
+
+                                    mCustomCardAdapter = new SearchCardAdapter(requireContext(),cardArrayList);
+                                    booksListView.setAdapter(mCustomCardAdapter);
+                                    booksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            Log.i("success","Clicked on:"+cardArrayList.get(i)[0]);
+
+                                        }
+                                    });
                                 } else {
                                     Log.i("Success Checking", "" + mResult.getError());
                                 }
