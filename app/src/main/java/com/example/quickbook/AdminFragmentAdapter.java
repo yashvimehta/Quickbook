@@ -4,15 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import com.example.quickbook.FragmentSetAdmin.IssuedBooksFragment;
-import com.example.quickbook.FragmentSetAdmin.ProfileFragment;
+import com.example.quickbook.FragmentSetAdmin.AdminIssuedBooksFragment;
+import com.example.quickbook.FragmentSetAdmin.AdminCreateProfileFragment;
 import com.example.quickbook.FragmentSetAdmin.SearchPageFragment;
-import com.example.quickbook.FragmentSetAdmin.SettingsFragment;
-import com.example.quickbook.FragmentSetAdmin.UploadPageFragment;
+import com.example.quickbook.FragmentSetAdmin.AdminSettingsFragment;
+import com.example.quickbook.FragmentSetAdmin.AdminUploadPageFragment;
 
-public class MainFragmentAdapter  extends FragmentPagerAdapter {
+public class AdminFragmentAdapter extends FragmentPagerAdapter {
 
-    public MainFragmentAdapter(FragmentManager fm)
+    public AdminFragmentAdapter(FragmentManager fm)
     {
         super(fm);
     }
@@ -22,20 +22,20 @@ public class MainFragmentAdapter  extends FragmentPagerAdapter {
     public Fragment getItem(int position)
     {
         if (position==0){
-            return new SettingsFragment();
+            return new AdminSettingsFragment();
         }
         else if (position == 1) {
-            return new ProfileFragment();
+            return new AdminCreateProfileFragment();
 
         }
         else if (position == 2) {
-            return new UploadPageFragment();
+            return new AdminUploadPageFragment();
         }
         else if (position ==3){
             return new SearchPageFragment();
         }
         else {
-            return new IssuedBooksFragment();
+            return new AdminIssuedBooksFragment();
         }
     }
 

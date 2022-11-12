@@ -14,7 +14,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.work.ListenableWorker;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -30,17 +29,12 @@ import android.widget.Toast;
 
 import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.RegisterResult;
-import com.example.quickbook.HomePage;
+import com.example.quickbook.AdminHomePage;
 import com.example.quickbook.R;
-import com.example.quickbook.SignUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -51,10 +45,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -69,11 +59,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import androidx.work.ListenableWorker.Result;
 
 
-
-public class ProfileFragment extends Fragment {
+public class AdminCreateProfileFragment extends Fragment {
 
     private static final int CAMERA_REQUEST = 1888;
     private static final int STORAGE_REQUEST = 7;
@@ -131,8 +119,8 @@ public class ProfileFragment extends Fragment {
 
     public String getFilePathFromUri(Uri uri) {
         String path = "";
-        if (HomePage.contextOfApplication.getContentResolver() != null) {
-            Cursor cursor = HomePage.contextOfApplication.getContentResolver().query(uri, null, null, null, null);
+        if (AdminHomePage.contextOfApplication.getContentResolver() != null) {
+            Cursor cursor = AdminHomePage.contextOfApplication.getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 cursor.moveToFirst();
                 int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
@@ -149,7 +137,7 @@ public class ProfileFragment extends Fragment {
         messageTextView.setVisibility(View.INVISIBLE);
         registerButton.setVisibility(View.INVISIBLE);
         try {
-            Bitmap photo = MediaStore.Images.Media.getBitmap(HomePage.contextOfApplication.getContentResolver(), currentImageUri);
+            Bitmap photo = MediaStore.Images.Media.getBitmap(AdminHomePage.contextOfApplication.getContentResolver(), currentImageUri);
 //            imageView.setImageBitmap(photo);
 
             Uri tempUri = saveBitmapImage(getContext(), photo);
@@ -300,7 +288,7 @@ public class ProfileFragment extends Fragment {
             Log.i("IMG CROPPER", "In cropper");
 
             try {
-                Bitmap photo = MediaStore.Images.Media.getBitmap(HomePage.contextOfApplication.getContentResolver(), currentImageUri);
+                Bitmap photo = MediaStore.Images.Media.getBitmap(AdminHomePage.contextOfApplication.getContentResolver(), currentImageUri);
                 imageView.setImageBitmap(photo);
                 registerButton.setVisibility(View.VISIBLE);
             } catch (IOException e) {
@@ -317,7 +305,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         firebaseAuth = FirebaseAuth.getInstance();
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_create_profile, container, false);
 
         messageTextView = view.findViewById(R.id.messageTextView);
 
@@ -337,7 +325,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 registerButton.setVisibility(View.INVISIBLE);
 
-                if (HomePage.contextOfApplication.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (AdminHomePage.contextOfApplication.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
 
                 } else {
@@ -354,7 +342,7 @@ public class ProfileFragment extends Fragment {
 
                 registerButton.setVisibility(View.INVISIBLE);
 
-                if (HomePage.contextOfApplication.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (AdminHomePage.contextOfApplication.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_REQUEST);
 
                 } else {

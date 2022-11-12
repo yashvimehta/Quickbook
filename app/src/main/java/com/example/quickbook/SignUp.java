@@ -104,7 +104,7 @@ public class SignUp extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Intent intent = new Intent(SignUp.this, HomePage.class);
+                                            Intent intent = new Intent(SignUp.this, AdminHomePage.class);
                                             startActivity(intent);
                                             finish();
                                         }

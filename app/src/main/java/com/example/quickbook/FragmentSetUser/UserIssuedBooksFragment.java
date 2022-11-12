@@ -1,6 +1,7 @@
-package com.example.quickbook.FragmentSetAdmin;
+package com.example.quickbook.FragmentSetUser;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -8,9 +9,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.quickbook.R;
 
-public class IssuedBooksFragment extends Fragment {
+public class UserIssuedBooksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,9 +21,9 @@ public class IssuedBooksFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_issued_books, container, false);
+        final View view = inflater.inflate(R.layout.fragment_user_issued_books, container, false);
 
-        return inflater.inflate(R.layout.fragment_issued_books, container, false);
+        return inflater.inflate(R.layout.fragment_user_issued_books, container, false);
     }
 
     @Override

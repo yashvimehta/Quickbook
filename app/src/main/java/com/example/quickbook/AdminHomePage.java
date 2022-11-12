@@ -35,7 +35,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HomePage extends AppCompatActivity {
+public class AdminHomePage extends AppCompatActivity {
 
     public static Context contextOfApplication;
 
@@ -55,10 +55,10 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.activity_admin_home_page);
         ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
 
-        MainFragmentAdapter adapter = new MainFragmentAdapter(getSupportFragmentManager());
+        AdminFragmentAdapter adapter = new AdminFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(2);
 

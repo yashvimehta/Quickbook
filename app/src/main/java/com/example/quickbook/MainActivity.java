@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void launchHomeActivity() {
-        Intent intent = new Intent(MainActivity.this, HomePage.class);
+        Intent intent = new Intent(MainActivity.this, AdminHomePage.class);
 
         startActivity(intent);
         finish();
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 //                                FirebaseUser user = firebaseAuth.getCurrentUser();
 //                                assert user != null;
                                 Log.i("SUCCESS", "Logged in " );
-                                Intent intent = new Intent(MainActivity.this, HomePage.class);
+                                Intent intent = new Intent(MainActivity.this, AdminHomePage.class);
                                 startActivity(intent);
                                 finish();
 

@@ -29,13 +29,11 @@ import android.widget.Toast;
 
 import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.BFResult;
-import com.example.quickbook.HomePage;
+import com.example.quickbook.AdminHomePage;
 import com.example.quickbook.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -61,7 +59,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class UploadPageFragment extends Fragment {
+public class AdminUploadPageFragment extends Fragment {
 
     private static final int CAMERA_REQUEST = 1888;
     private static final int STORAGE_REQUEST = 7;
@@ -122,8 +120,8 @@ public class UploadPageFragment extends Fragment {
 
     public String getFilePathFromUri(Uri uri) {
         String path = "";
-        if (HomePage.contextOfApplication.getContentResolver() != null) {
-            Cursor cursor = HomePage.contextOfApplication.getContentResolver().query(uri, null, null, null, null);
+        if (AdminHomePage.contextOfApplication.getContentResolver() != null) {
+            Cursor cursor = AdminHomePage.contextOfApplication.getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 cursor.moveToFirst();
                 int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
@@ -140,7 +138,7 @@ public class UploadPageFragment extends Fragment {
         messageTextView.setVisibility(View.INVISIBLE);
 
         try {
-            Bitmap photo = MediaStore.Images.Media.getBitmap(HomePage.contextOfApplication.getContentResolver(), currentImageUri);
+            Bitmap photo = MediaStore.Images.Media.getBitmap(AdminHomePage.contextOfApplication.getContentResolver(), currentImageUri);
             imageView.setImageBitmap(photo);
 
             Uri tempUri = saveBitmapImage(getContext(), photo);
@@ -293,7 +291,7 @@ public class UploadPageFragment extends Fragment {
         assert mUser != null;
         DocumentReference mDocumentReference = db.collection("Users").document(mUser.getUid());
 
-        View view = inflater.inflate(R.layout.fragment_upload_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_upload_page, container, false);
         messageTextView = view.findViewById(R.id.messageTextView);
 
         retryButton = view.findViewById(R.id.buttonDetect);
@@ -319,7 +317,7 @@ public class UploadPageFragment extends Fragment {
 
                 gotoResultButton.setVisibility(View.INVISIBLE);
 
-                if (HomePage.contextOfApplication.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (AdminHomePage.contextOfApplication.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
 
                 } else {
@@ -337,7 +335,7 @@ public class UploadPageFragment extends Fragment {
 
                 gotoResultButton.setVisibility(View.INVISIBLE);
 
-                if (HomePage.contextOfApplication.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (AdminHomePage.contextOfApplication.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_REQUEST);
 
                 } else {

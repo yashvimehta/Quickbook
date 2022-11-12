@@ -1,7 +1,6 @@
 package com.example.quickbook.FragmentSetAdmin;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,16 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.quickbook.HomePage;
 import com.example.quickbook.R;
-import com.example.quickbook.SignUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -32,13 +26,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-
-public class SettingsFragment extends Fragment {
+public class AdminSettingsFragment extends Fragment {
     EditText issueDurationInputText;
     EditText consecutiveIssualsInputText;
     EditText fineInputText;
@@ -55,7 +44,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         firebaseAuth = FirebaseAuth.getInstance();
-        final View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        final View view = inflater.inflate(R.layout.fragment_admin_settings, container, false);
         issueDurationInputText=view.findViewById(R.id.issueDurationInputText);
         consecutiveIssualsInputText=view.findViewById(R.id.consecutiveIssualsInputText);
         fineInputText=view.findViewById(R.id.fineInputText);
