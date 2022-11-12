@@ -34,6 +34,8 @@ android {
 
 dependencies {
 
+
+
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -72,5 +74,8 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
     implementation "androidx.cardview:cardview:1.0.0"
+
+    implementation 'com.google.android.material:material:1.2.1'
+
 
 }

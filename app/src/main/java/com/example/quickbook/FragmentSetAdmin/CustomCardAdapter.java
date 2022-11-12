@@ -30,8 +30,13 @@ public class CustomCardAdapter extends ArrayAdapter<String> {
     ArrayList<Boolean> likedArrayList;
     boolean showLikes;
 
-    public CustomCardAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
+    public CustomCardAdapter(@NonNull Context context, ArrayList<String> stringArrayList, ArrayList<Boolean> booleanArrayList, boolean isHistory) {
+        super(context, R.layout.custom_card, stringArrayList);
+
+        this.mContext = context;
+        this.mArrayList = stringArrayList;
+        this.likedArrayList = booleanArrayList;
+        this.showLikes = isHistory;
     }
 
 
@@ -44,8 +49,10 @@ public class CustomCardAdapter extends ArrayAdapter<String> {
         TextView IDandReturn = view.findViewById(R.id.IDandReturn);
 
 
+        String[] str = mArrayList.get(position).split(" ");
 
-
+        bookName.setText(str[0]);
+        IDandReturn.setText(str[1] + " " + str[2]);
 
         return view;
     }
