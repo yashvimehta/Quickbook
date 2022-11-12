@@ -94,7 +94,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/dosis_semibold"
             android:gravity="bottom"
             android:text="Search Books"
             android:textColor="#FFFFFF"

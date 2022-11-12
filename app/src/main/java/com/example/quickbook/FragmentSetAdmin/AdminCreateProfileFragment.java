@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 
@@ -169,46 +170,7 @@ public class AdminCreateProfileFragment extends Fragment {
                     RegisterResult mResult = response.body();
                     if (mResult.getSuccess()) {
                         Log.i("Success Checking", "success");
-
-//                        String memberId = nameInputText.getText().toString();
-//                        String email = "new.email@spit.ac.in";
-//                        firebaseAuth.createUserWithEmailAndPassword(email, memberId)
-//                                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<AuthResult> task) {
-//
-//                                        if (task.isSuccessful()) {
-//
-//                                            FirebaseUser user = firebaseAuth.getCurrentUser();
-//
-//                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-//                                            Map<String, Object> mMap = new HashMap<>();
-//                                            mMap.put("email", email);
-//                                            mMap.put("memberId", memberId);
-//                                            mMap.put("password", memberId);
-//                                            mMap.put("issuedBooks", new ArrayList<String>());
-//                                            mMap.put("Name", "name" );
-//
-//
-//                                            assert user != null;
-//                                            db.collection("Users").document(user.getUid()).set(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                @Override
-//                                                public void onComplete(@NonNull Task<Void> task) {
-//                                                    if (task.isSuccessful()) {
-//                                                        Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
-//                                                    }
-//                                                    else{
-//                                                        Log.i("FAIL", "Sign Up failed " + task.getException());
-//                                                        Toast.makeText(ProfileFragment.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                                                    }
-//                                                }
-//                                            });
-//
-//                                        } else {
-//                                            Log.i("FAIL", "Sign Up failed " + task.getException());
-//                                        }
-//                                    }
-//                                });
+//                        createUser();
                         nameInputText.setText("na");
                     } else {
                         Toast.makeText(getContext(), "There was some error. Please retry", Toast.LENGTH_SHORT).show();
@@ -397,8 +359,43 @@ public class AdminCreateProfileFragment extends Fragment {
 
         return view;
     }
-    public boolean checkMemberID(String memberId){
-        return true;
+    public void createUser(){
+        String memberId = nameInputText.getText().toString();
+        String email = "new.email@spit.ac.in";
+        firebaseAuth.createUserWithEmailAndPassword(email, memberId)
+                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            Map<String, Object> mMap = new HashMap<>();
+                            mMap.put("email", email);
+                            mMap.put("memberId", memberId);
+                            mMap.put("password", memberId);
+                            mMap.put("issuedBooks", new ArrayList<String>());
+                            mMap.put("Name", "name" );
+                            assert user != null;
+                            db.collection("Users").document(user.getUid()).set(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Log.i("FAIL", "Sign Up failed " + task.getException());
+                                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                        //TODO remove user from azure
+                                    }
+                                }
+                            });
+
+                        } else {
+                            Log.i("FAIL", "Sign Up failed " + task.getException());
+                        }
+                    }
+                });
     }
 
 }
