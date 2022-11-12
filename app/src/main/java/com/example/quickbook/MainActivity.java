@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static boolean isAdmin;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 //                                FirebaseUser user = firebaseAuth.getCurrentUser();
 //                                assert user != null;
                                 Log.i("SUCCESS", "Logged in " );
+                                isAdmin=true;
+                                //TODO Set isAdmin=false if user is member
                                 Intent intent = new Intent(MainActivity.this, AdminHomePage.class);
                                 startActivity(intent);
                                 finish();

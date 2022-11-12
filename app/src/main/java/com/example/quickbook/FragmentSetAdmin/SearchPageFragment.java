@@ -1,6 +1,7 @@
 package com.example.quickbook.FragmentSetAdmin;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,8 +21,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.quickbook.AdminHomePage;
 import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.SearchBookResult;
+import com.example.quickbook.BookInfo;
 import com.example.quickbook.R;
 import com.example.quickbook.SearchCardAdapter;
 import com.google.gson.Gson;
@@ -99,6 +102,10 @@ public class SearchPageFragment extends Fragment {
                                         @Override
                                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                             Log.i("success","Clicked on:"+cardArrayList.get(i)[0]);
+                                            Intent intent = new Intent(getActivity().getApplication(), BookInfo.class);
+                                            intent.putExtra("bookData",cardArrayList.get(i));
+                                            startActivity(intent);
+
 
                                         }
                                     });

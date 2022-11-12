@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".UserHomePage"></activity>
+        <activity android:name=".BookInfo"></activity>
+        <activity android:name=".UserHomePage" />
         <activity
             android:name=".AdminHomePage"
             android:exported="true">
