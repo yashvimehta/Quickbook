@@ -82,9 +82,8 @@ public class AdminCreateProfileFragment extends Fragment {
     Button registerButton;
     Uri currentImageUri;
 
-    TextInputLayout nameTextInputLayout;
     EditText nameInputText;
-
+    EditText emailInputText;
     @SuppressLint("StaticFieldLeak")
     static ProgressBar progressBar;
 
@@ -172,6 +171,7 @@ public class AdminCreateProfileFragment extends Fragment {
                         Log.i("Success Checking", "success");
 //                        createUser();
                         nameInputText.setText("na");
+                        emailInputText.setText("na");
                     } else {
                         Toast.makeText(getContext(), "There was some error. Please retry", Toast.LENGTH_SHORT).show();
 
@@ -280,9 +280,8 @@ public class AdminCreateProfileFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-        nameTextInputLayout=view.findViewById(R.id.nameTextInputLayout);
-        nameInputText=view.findViewById(R.id.issueDurationInputText);
-
+        nameInputText=view.findViewById(R.id.nameInputText);
+        emailInputText=view.findViewById(R.id.emailInputText);
 
         imageView = view.findViewById(R.id.imageViewSelectImage);
 
@@ -323,8 +322,8 @@ public class AdminCreateProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String memberId=nameInputText.getText().toString();
-                String email1 = "yashvi.mehta@spit.ac.in";
-                if (memberId.equals("na")){
+                String emailId= emailInputText.getText().toString();
+                if (memberId.equals("na") || emailId.equals("na")){
                     Toast.makeText(getContext(), "Member ID cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -339,7 +338,7 @@ public class AdminCreateProfileFragment extends Fragment {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String id = String.valueOf(document.getData().get("memberID"));
                                         String email = String.valueOf(document.getData().get("email"));
-                                        if(id.equals(memberId) || email.equals(email1)){
+                                        if(id.equals(memberId) || email.equals(emailId)){
                                             val++;
                                         }
                                     }
