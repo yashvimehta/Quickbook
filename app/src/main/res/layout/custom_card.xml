@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="1dp"
+    app:cardMaxElevation="1dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--ImageVIew to display our Course Image-->
+
+        <!--Text View to display Course Name-->
+
+        <TextView
+            android:id="@+id/IDandReturn"
+            android:layout_width="260dp"
+            android:layout_height="14dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="51dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bookName"
+            android:layout_width="315dp"
+            android:layout_height="49dp"
+            android:text="TextView" />
+
+        <!--Text VIew to display COurse Rating-->
+        <!--Image used in present in drawable folder-->
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
