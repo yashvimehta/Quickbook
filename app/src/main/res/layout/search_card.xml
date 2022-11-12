@@ -50,7 +50,7 @@
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@id/bookImageView"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <!--Text VIew to display COurse Rating-->
         <!--Image used in present in drawable folder-->
