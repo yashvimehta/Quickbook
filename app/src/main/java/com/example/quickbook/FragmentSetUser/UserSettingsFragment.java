@@ -67,6 +67,19 @@ public class UserSettingsFragment extends Fragment {
                 }
                 if (correct) {
                     //TODO Store new password in firebase
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    user.updatePassword(pwd)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("YAYAY", "Password address updated.");
+                                    }
+                                }
+                            });
+
+                    db.collection("Users").document(user.getUid()).update("password", pwd);
                     Toast.makeText(getActivity(), "Changes stored successfully", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
