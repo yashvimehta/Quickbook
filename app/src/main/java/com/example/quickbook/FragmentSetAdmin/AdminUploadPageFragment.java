@@ -1,5 +1,7 @@
 package com.example.quickbook.FragmentSetAdmin;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,6 +33,8 @@ import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.BFResult;
 import com.example.quickbook.AdminHomePage;
 import com.example.quickbook.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +43,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -46,6 +52,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -177,6 +185,63 @@ public class AdminUploadPageFragment extends Fragment {
 
                         gotoResultButton.setVisibility(View.VISIBLE);
                         retryButton.setVisibility(View.INVISIBLE);
+
+                        String book_isbn = mResult.getIsbn();
+                        String book_name = mResult.getTitle();
+                        String member_id = mResult.getName();
+
+                        //create book
+                        //create transaction
+                        //add in user
+
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("Books")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        int val = 0;
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                String isbn = String.valueOf(document.getData().get("ISBN"));
+                                                if(book_isbn.equals(isbn)){
+                                                    val++;
+                                                }
+                                            }
+                                            if(val==0){
+                                                addBook(book_isbn, book_name);
+                                            }
+                                            else{
+                                                db.collection("Books")
+                                                        .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                int val = 0;
+                                                                if (task.isSuccessful()) {
+                                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                        if(String.valueOf(document.getData().get("ISBN")).equals(book_isbn)) {
+//                                                                            String copies = String.valueOf(document.getData().get("Copies").   );
+//                                                                            document.getData().update("Copies", Integer.valueOf(copies) - 1);
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                                                }
+                                                            }
+                                                        });
+
+
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
+
+
+
+
 
                     } else {
                         String text = "Failure";
@@ -412,6 +477,15 @@ public class AdminUploadPageFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void addBook(String isbn, String name){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> mMap = new HashMap<>();
+        mMap.put("Name", name);
+        mMap.put("ISBN", isbn);
+        mMap.put("Copies", "0");
+        db.collection("Books").add(mMap);
     }
 
 }

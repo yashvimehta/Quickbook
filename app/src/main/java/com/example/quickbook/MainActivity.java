@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i("SUCCESS", "Logged in " );
                                 isAdmin=false;
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                db.collection("Admin")
+                                db.collection("Admins")
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                                                         String email1 = String.valueOf(document.getData().get("email"));
                                                         if (email1.equals(email)) {
                                                             isAdmin=true;
+                                                            break;
                                                         }
                                                     }
                                                     if (isAdmin) {
