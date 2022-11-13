@@ -169,7 +169,7 @@ public class AdminCreateProfileFragment extends Fragment {
                     RegisterResult mResult = response.body();
                     if (mResult.getSuccess()) {
                         Log.i("Success Checking", "success");
-//                        createUser();
+                        createUser();
                         nameInputText.setText("na");
                         emailInputText.setText("na");
                     } else {
@@ -324,7 +324,7 @@ public class AdminCreateProfileFragment extends Fragment {
                 String memberId=nameInputText.getText().toString();
                 String emailId= emailInputText.getText().toString();
                 if (memberId.equals("na") || emailId.equals("na")){
-                    Toast.makeText(getContext(), "Member ID cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Member ID / Email cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -360,7 +360,7 @@ public class AdminCreateProfileFragment extends Fragment {
     }
     public void createUser(){
         String memberId = nameInputText.getText().toString();
-        String email = "new.email@spit.ac.in";
+        String email = emailInputText.getText().toString();
         firebaseAuth.createUserWithEmailAndPassword(email, memberId)
                 .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
                     @Override

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -11,32 +12,66 @@
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!--ImageVIew to display our Course Image-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="401dp"
+        android:layout_height="97dp">
 
         <!--Text View to display Course Name-->
 
         <TextView
-            android:id="@+id/IDandReturn"
-            android:layout_width="260dp"
-            android:layout_height="14dp"
+            android:id="@+id/bookName"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="51dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/bookName"
-            android:layout_width="315dp"
-            android:layout_height="49dp"
-            android:text="TextView" />
+            android:id="@+id/ID"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bookName"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bookName" />
+
+        <TextView
+            android:id="@+id/returnDate"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ID"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ID" />
+
+        <Button
+            android:id="@+id/endIssue"
+            android:layout_width="100dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="26dp"
+            android:background="@drawable/custom_button"
+            android:text="End Issue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.22"
+            app:layout_constraintStart_toEndOf="@+id/bookName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
 
         <!--Text VIew to display COurse Rating-->
         <!--Image used in present in drawable folder-->
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
