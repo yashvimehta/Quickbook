@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import static com.example.quickbook.MainActivity.isAdmin;
+
 public class BookInfo extends AppCompatActivity {
     TextView titleTextView;
     ImageView thumbnailImageView;
@@ -76,11 +78,8 @@ public class BookInfo extends AppCompatActivity {
         //TODO Get data from Firebase and set
         noOfCopiesEditText.setText("10");
         saveCopiesButton = findViewById(R.id.saveCopiesButton);
-
-        //TODO Check whether user is admin or not
-        boolean adminCheck=true;
-
-        if(adminCheck) {
+        
+        if(isAdmin) {
             Log.i("Success","is admin");
             noOfCopiesEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
