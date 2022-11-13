@@ -66,7 +66,6 @@ public class UserSettingsFragment extends Fragment {
                     correct = false;
                 }
                 if (correct) {
-                    //TODO Store new password in firebase
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     user.updatePassword(pwd)
