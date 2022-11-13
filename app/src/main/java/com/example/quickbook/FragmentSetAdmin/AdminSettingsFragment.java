@@ -128,7 +128,6 @@ public class AdminSettingsFragment extends Fragment {
                     correct=false;
                 }
                 if(correct){
-                    //TODO Store values in DB
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 //                    db.collection("Admin").document(user.getUid()).update("password", pwd);
