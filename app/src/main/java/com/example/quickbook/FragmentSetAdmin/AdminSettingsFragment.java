@@ -21,13 +21,21 @@ import com.example.quickbook.R;
 import com.example.quickbook.SignUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 public class AdminSettingsFragment extends Fragment {
@@ -46,6 +54,8 @@ public class AdminSettingsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         final View view = inflater.inflate(R.layout.fragment_admin_settings, container, false);
         issueDurationInputText=view.findViewById(R.id.issueDurationInputText);
@@ -53,7 +63,7 @@ public class AdminSettingsFragment extends Fragment {
         fineInputText=view.findViewById(R.id.fineInputText);
         confirmRulesButton=view.findViewById(R.id.confirmRulesButton);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         DocumentReference rulesDocumentRef = db.collection("Rules").document("ruless");
         rulesDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

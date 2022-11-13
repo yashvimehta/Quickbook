@@ -89,7 +89,6 @@ public class AdminIssuedBooksFragment extends Fragment {
                                             Date javaDate = javaDate1.toDate();
                                             String[] returnDate = String.valueOf(javaDate).split(" GMT");
                                             String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
-//                                Log.i("date", returnn);
                                             if (searchName.equals(issuerID)) {
                                                 stringArrayList.add(new String[]{bookName, issuerID, returnn});
                                                 val++;

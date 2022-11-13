@@ -33,14 +33,18 @@ import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.BFResult;
 import com.example.quickbook.AdminHomePage;
 import com.example.quickbook.R;
+import com.example.quickbook.SignUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -52,6 +56,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -191,9 +197,6 @@ public class AdminUploadPageFragment extends Fragment {
                         String member_id = mResult.getName();
 
                         //create book
-                        //create transaction
-                        //add in user
-
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         db.collection("Books")
                                 .get()
@@ -204,14 +207,14 @@ public class AdminUploadPageFragment extends Fragment {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 String isbn = String.valueOf(document.getData().get("ISBN"));
-                                                if(book_isbn.equals(isbn)){
+                                                if(book_isbn.equals(isbn)){  //if ISBN exists
                                                     val++;
                                                 }
                                             }
                                             if(val==0){
-                                                addBook(book_isbn, book_name);
+                                                addBook(book_isbn, book_name);  //add new book in DB if ISBN doesn't exist
                                             }
-                                            else{
+                                            else{  //update no of copies
                                                 db.collection("Books")
                                                         .get()
                                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -221,8 +224,8 @@ public class AdminUploadPageFragment extends Fragment {
                                                                 if (task.isSuccessful()) {
                                                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                                                         if(String.valueOf(document.getData().get("ISBN")).equals(book_isbn)) {
-//                                                                            String copies = String.valueOf(document.getData().get("Copies").   );
-//                                                                            document.getData().update("Copies", Integer.valueOf(copies) - 1);
+                                                                            String copies = String.valueOf(document.getData().get("Copies"));
+                                                                            document.getData().replace("Copies", Integer.valueOf(copies)-1);
                                                                         }
                                                                     }
                                                                 } else {
@@ -230,8 +233,6 @@ public class AdminUploadPageFragment extends Fragment {
                                                                 }
                                                             }
                                                         });
-
-
                                             }
                                         } else {
                                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -239,9 +240,35 @@ public class AdminUploadPageFragment extends Fragment {
                                     }
                                 });
 
+                        //create transaction
+                        Map<String, Object> mMap = new HashMap<>();
+                        mMap.put("bookISBN", book_isbn);
+                        mMap.put("bookName", book_name);
+                        mMap.put("issuerID", member_id);
+                        mMap.put("issuerDate", new Timestamp(new Date()));
+                        long unixTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 1209600;
+                        mMap.put("returnDate", new Timestamp(new Date(unixTime)));
+                        db.collection("Transactions").add(mMap);
 
-
-
+                        //add in user
+                        db.collection("Users")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        int val = 0;
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                String memberID = String.valueOf(document.getData().get("memberID"));
+                                                if(memberID.equals(member_id)){  //if ISBN exists
+                                                    document.getData().put("issuedBooks", FieldValue.arrayUnion(book_name));
+                                                }
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
 
                     } else {
                         String text = "Failure";
