@@ -32,7 +32,7 @@ public class AdminSettingsFragment extends Fragment {
     EditText consecutiveIssualsInputText;
     EditText fineInputText;
     Button confirmRulesButton;
-    EditText emailInputText;
+    Button logoutButton;
     EditText pwdInputText;
     EditText confirmPwdInputText;
     Button editProfileButton;
@@ -64,11 +64,10 @@ public class AdminSettingsFragment extends Fragment {
         });
         //fetch from db
 
-        emailInputText=view.findViewById(R.id.emailInputText);
         pwdInputText=view.findViewById(R.id.pwdInputText);
         confirmPwdInputText=view.findViewById(R.id.confirmPwdInputText);
         editProfileButton=view.findViewById(R.id.editProfileButton);
-
+        logoutButton=view.findViewById(R.id.logoutButton);
         confirmRulesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,16 +100,21 @@ public class AdminSettingsFragment extends Fragment {
                 }
             }
         });
-
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                getActivity().finish();
+            }
+        });
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email=emailInputText.getText().toString();
                 String pwd=pwdInputText.getText().toString();
                 String confirmPwd=confirmPwdInputText.getText().toString();
                 boolean correct=true;
                 String message="";
-                if(email.equals("") || pwd.equals("") ||confirmPwd.equals("")){
+                if(pwd.equals("") ||confirmPwd.equals("")){
                     message=message.concat("Fields cannot be empty. ");
                     correct=false;
                 }
@@ -122,7 +126,6 @@ public class AdminSettingsFragment extends Fragment {
                     //TODO Store values in DB
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("Users").document(user.getUid()).update("email", email);
                     db.collection("Users").document(user.getUid()).update("password", pwd);
                     DocumentReference rulesDocumentRef = db.collection("Rules").document(user.getUid());
                     rulesDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
