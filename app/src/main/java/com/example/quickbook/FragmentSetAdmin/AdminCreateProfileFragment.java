@@ -138,6 +138,7 @@ public class AdminCreateProfileFragment extends Fragment {
     }
 
     public void getPredictionsFromServer() {
+        createUser();
         progressBar.setVisibility(View.VISIBLE);
         messageTextView.setVisibility(View.INVISIBLE);
         registerButton.setVisibility(View.INVISIBLE);
@@ -169,7 +170,6 @@ public class AdminCreateProfileFragment extends Fragment {
                     RegisterResult mResult = response.body();
                     if (mResult.getSuccess()) {
                         Log.i("Success Checking", "success");
-                        createUser();
                         nameInputText.setText("na");
                         emailInputText.setText("na");
                     } else {
@@ -362,19 +362,24 @@ public class AdminCreateProfileFragment extends Fragment {
         String memberId = nameInputText.getText().toString();
         String email = emailInputText.getText().toString();
         firebaseAuth.createUserWithEmailAndPassword(email, memberId)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.i("heyyy1", "heyyy1");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                            Log.i("heyyy2", "heyyy2");
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            Log.i("heyyy3", "heyyy3");
                             Map<String, Object> mMap = new HashMap<>();
                             mMap.put("email", email);
                             mMap.put("memberId", memberId);
                             mMap.put("password", memberId);
                             mMap.put("issuedBooks", new ArrayList<String>());
                             mMap.put("Name", "name" );
+                            Log.i("heyyy4", "heyyy4");
                             assert user != null;
+                            Log.i("heyyy5", "heyyy5");
                             db.collection("Users").document(user.getUid()).set(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -385,7 +390,6 @@ public class AdminCreateProfileFragment extends Fragment {
                                         Log.i("FAIL", "Sign Up failed " + task.getException());
                                         Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                        //TODO remove user from azure
                                     }
                                 }
                             });

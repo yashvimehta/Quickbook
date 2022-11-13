@@ -131,25 +131,16 @@ public class AdminSettingsFragment extends Fragment {
                     //TODO Store values in DB
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("Users").document(user.getUid()).update("password", pwd);
-                    DocumentReference rulesDocumentRef = db.collection("Rules").document(user.getUid());
-                    rulesDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                Log.i("phone", String.valueOf(task.getResult().getData().get("Phone Number")));
-                            }
-                        }
-                    });
-//                    user.updateEmail(email)
-//                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if (task.isSuccessful()) {
-//                                        Log.d("YAYAY", "User email address updated.");
-//                                    }
-//                                }
-//                            });
+//                    db.collection("Admin").document(user.getUid()).update("password", pwd);
+                    user.updatePassword(pwd)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("YAYAY", "Password address updated.");
+                                    }
+                                }
+                            });
 
                     Toast.makeText(getActivity(), "Changes stored successfully", Toast.LENGTH_LONG).show();
                 }
