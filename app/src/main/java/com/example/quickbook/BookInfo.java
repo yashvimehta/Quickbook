@@ -1,5 +1,6 @@
 package com.example.quickbook;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +18,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import static com.example.quickbook.MainActivity.isAdmin;
 
 public class BookInfo extends AppCompatActivity {
     TextView titleTextView;
@@ -76,11 +75,16 @@ public class BookInfo extends AppCompatActivity {
         noOfCopiesEditText=findViewById(R.id.noOfCopiesInputText);
         //TODO Get data from Firebase and set
         noOfCopiesEditText.setText("10");
+        saveCopiesButton = findViewById(R.id.saveCopiesButton);
 
-        if(isAdmin) {
+        //TODO Check whether user is admin or not
+        boolean adminCheck=true;
+
+        if(adminCheck) {
+            Log.i("Success","is admin");
             noOfCopiesEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-            saveCopiesButton = findViewById(R.id.saveCopiesButton);
+
             saveCopiesButton.setVisibility(View.VISIBLE);
             saveCopiesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,6 +94,11 @@ public class BookInfo extends AppCompatActivity {
                     //TODO Set value in Firebase
                 }
             });
+        }
+        else{
+            noOfCopiesEditText.setInputType(InputType.TYPE_NULL);
+            saveCopiesButton.setVisibility(View.INVISIBLE);
+            Log.i("success","is not admin");
         }
     }
 

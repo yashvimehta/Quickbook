@@ -17,7 +17,7 @@ public class UserHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_user_home_page);
         ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
 
-        AdminFragmentAdapter adapter = new AdminFragmentAdapter(getSupportFragmentManager());
+        UserFragmentAdapter adapter = new UserFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
 
