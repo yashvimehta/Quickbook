@@ -30,7 +30,7 @@ public class SearchCardAdapter extends ArrayAdapter<String[]> {
     ArrayList<String[]> mArrayList;
 
     public SearchCardAdapter(@NonNull Context context, ArrayList<String[]> stringArrayList) {
-        super(context, R.layout.custom_card,stringArrayList);
+        super(context, R.layout.search_card,stringArrayList);
         this.mContext = context;
         this.mArrayList = stringArrayList;
     }

@@ -51,32 +51,7 @@ public class ResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("Transactions")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int val = 0;
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String bookName = String.valueOf(document.getData().get("bookName"));
-                                String issuerID = String.valueOf(document.getData().get("issuerID"));
-                                String returnDate = String.valueOf(document.getData().get("returnDate"));
-                                stringArrayList.add(bookName + " " + issuerID + " " + returnDate);
-                                Log.i("set ", "yayayay");
-
-                                mAdapter.notifyDataSetChanged();
-                                Log.i("set1 ", "yayayay");
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-        mAdapter = new CustomCardAdapter(this, stringArrayList, new ArrayList<Boolean>(), false);
 
 
     }
