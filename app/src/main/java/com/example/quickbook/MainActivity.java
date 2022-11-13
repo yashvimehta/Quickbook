@@ -85,22 +85,21 @@ public class MainActivity extends AppCompatActivity {
 //                                FirebaseUser user = firebaseAuth.getCurrentUser();
 //                                assert user != null;
                                 Log.i("SUCCESS", "Logged in " );
-                                isAdmin=true;
+                                isAdmin=false;
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 db.collection("Admin")
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                int val = 0;
                                                 if (task.isSuccessful()) {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                                         String email1 = String.valueOf(document.getData().get("email"));
                                                         if (email1.equals(email)) {
-                                                            val++;
+                                                            isAdmin=true;
                                                         }
                                                     }
-                                                    if (val != 0) {
+                                                    if (isAdmin) {
                                                         Intent intent = new Intent(MainActivity.this, AdminHomePage.class);
                                                         startActivity(intent);
                                                         finish();
