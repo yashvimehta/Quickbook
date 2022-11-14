@@ -63,12 +63,10 @@ public class AdminIssuedBooksFragment extends Fragment {
         });
 
         setAllData("");
-        Log.i("setttt", "ppp");
         return view;
     }
 
     public void setAllData(String searchName){
-        int val=0;
         db.collection("Transactions")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
