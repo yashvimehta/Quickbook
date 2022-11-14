@@ -31,9 +31,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -57,8 +59,12 @@ public class AdminSettingsFragment extends Fragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         //TODO Timestamp - below 2 lines update the "timeee" field in Rules document of firebase. While testing, go to settings in admin, and it'll be updated there.
-        long unixTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 1209600; //code for timestamp 14 days after current
-        db.collection("Rules").document("ruless").update("timeee", new Timestamp(new Date(unixTime)));
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 14);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE,59);
+        c.set(Calendar.SECOND,59);
+        db.collection("Rules").document("ruless").update("timeee", c.getTime());
 
 
         firebaseAuth = FirebaseAuth.getInstance();
