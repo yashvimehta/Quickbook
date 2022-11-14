@@ -56,6 +56,11 @@ public class AdminSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //TODO Timestamp - below 2 lines update the "timeee" field in Rules document of firebase. While testing, go to settings in admin, and it'll be updated there.
+        long unixTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 1209600;
+        db.collection("Rules").document("ruless").update("timeee", unixTime);
+
+
         firebaseAuth = FirebaseAuth.getInstance();
         final View view = inflater.inflate(R.layout.fragment_admin_settings, container, false);
         issueDurationInputText=view.findViewById(R.id.issueDurationInputText);

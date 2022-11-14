@@ -246,9 +246,13 @@ public class AdminUploadPageFragment extends Fragment {
                         mMap.put("bookName", book_name);
                         mMap.put("issuerID", member_id);
                         mMap.put("issuerDate", new Timestamp(new Date()));
+
+                        ///123456543234    + 1209600
                         long unixTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 1209600;
                         mMap.put("returnDate", new Timestamp(new Date(unixTime)));
                         db.collection("Transactions").add(mMap);
+
+
 
                         //add in user
                         db.collection("Users")
