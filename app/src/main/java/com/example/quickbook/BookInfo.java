@@ -1,5 +1,7 @@
 package com.example.quickbook;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -18,8 +20,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import static com.example.quickbook.MainActivity.isAdmin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BookInfo extends AppCompatActivity {
     TextView titleTextView;
@@ -74,10 +84,54 @@ public class BookInfo extends AppCompatActivity {
             publishTextView.setVisibility(View.INVISIBLE);
         }
 
+        //TODO ask M shows 14 first and then updated
         noOfCopiesEditText=findViewById(R.id.noOfCopiesInputText);
-        //TODO Get data from Firebase and set  if book doesnt exist, create a new book and set the copies as 0
 
-        noOfCopiesEditText.setText("10");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String[] finalBookData = bookData;
+        db.collection("Books")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int val = 0;
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String isbn = String.valueOf(document.getData().get("ISBN"));
+                                if(finalBookData[6].equals(isbn)){  //if ISBN exists
+                                    val++;
+                                }
+                            }
+                            if(val==0){
+                                addBook(finalBookData[6], finalBookData[0]);  //add new book in DB if ISBN doesn't exist
+                                noOfCopiesEditText.setText("0");
+                            }
+                            else{
+                                db.collection("Books")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                int val = 0;
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        if(String.valueOf(document.getData().get("ISBN")).equals(finalBookData[6])) {
+                                                            String copies = String.valueOf(document.getData().get("Copies"));
+                                                            noOfCopiesEditText.setText(copies);
+                                                        }
+                                                    }
+                                                } else {
+                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                                }
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
         saveCopiesButton = findViewById(R.id.saveCopiesButton);
         
         if(isAdmin) {
@@ -90,9 +144,33 @@ public class BookInfo extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String noOfCopies = noOfCopiesEditText.getText().toString();
-                    Toast.makeText(BookInfo.this, "No. of copies updated!", Toast.LENGTH_SHORT).show();
-                    //TODO update no of copies in firebase
-                    //TODO shouldn't be empty or <0
+                    if(noOfCopies.equals("")){
+                        Toast.makeText(BookInfo.this, "No. of copies cannot be empty", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(Integer.parseInt(noOfCopies)<0){
+                        Toast.makeText(BookInfo.this, "No. of copies cannot be less than 0!", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        db.collection("Books")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        int val = 0;
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                if(String.valueOf(document.getData().get("ISBN")).equals(finalBookData[6])) {
+                                                    Log.i("copiesss",noOfCopies);
+                                                    db.collection("Books").document(document.getId()).update("Copies", noOfCopies);
+                                                }
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
+                        Toast.makeText(BookInfo.this, "No. of copies updated!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -107,5 +185,13 @@ public class BookInfo extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+    public void addBook(String isbn, String name){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> mMap = new HashMap<>();
+        mMap.put("Name", name);
+        mMap.put("ISBN", isbn);
+        mMap.put("Copies", "0");
+        db.collection("Books").add(mMap);
     }
 }

@@ -78,12 +78,14 @@ public class AdminIssuedBooksFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String bookName = String.valueOf(document.getData().get("bookName"));
                                 String issuerID = String.valueOf(document.getData().get("issuerID"));
+                                Boolean endIssue = Boolean.valueOf(String.valueOf(document.getData().get("endIssue")));
                                 Timestamp javaDate1 = (Timestamp) document.getData().get("returnDate");
                                 Date javaDate = javaDate1.toDate();
                                 String[] returnDate  = String.valueOf(javaDate).split(" GMT") ;
                                 String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
-                                if (searchName.equals("")||searchName.equals(issuerID)) {
-                                    stringArrayList.add(new String[]{bookName, issuerID, returnn});
+                                String documentID = document.getId();
+                                if (  (searchName.equals("")||searchName.equals(issuerID))  && !endIssue ) {
+                                    stringArrayList.add(new String[]{bookName, issuerID, returnn, documentID});
                                     val++;
                                 }
                             }

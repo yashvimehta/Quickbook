@@ -469,7 +469,7 @@ public class AdminUploadPageFragment extends Fragment {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                                         if(String.valueOf(document.getData().get("ISBN")).equals(book_isbn)) {
                                                             String copies = String.valueOf(document.getData().get("Copies"));
-                                                            document.getData().replace("Copies", Integer.valueOf(copies)-1);
+                                                            db.collection("Books").document(document.getId()).update("Copies", Integer.valueOf(copies)-1);
                                                         }
                                                     }
                                                 } else {
@@ -490,6 +490,7 @@ public class AdminUploadPageFragment extends Fragment {
         mMap.put("bookName", book_name);
         mMap.put("issuerID", member_id);
         mMap.put("issuerDate", new Timestamp(new Date()));
+        mMap.put("endIssue", false);
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 14);
         c.set(Calendar.HOUR_OF_DAY, 23);
