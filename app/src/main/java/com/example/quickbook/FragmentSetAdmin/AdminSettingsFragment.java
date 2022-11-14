@@ -58,15 +58,6 @@ public class AdminSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //TODO Timestamp - below 2 lines update the "timeee" field in Rules document of firebase. While testing, go to settings in admin, and it'll be updated there.
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 14);
-        c.set(Calendar.HOUR_OF_DAY, 23);
-        c.set(Calendar.MINUTE,59);
-        c.set(Calendar.SECOND,59);
-        db.collection("Rules").document("ruless").update("timeee", c.getTime());
-
-
         firebaseAuth = FirebaseAuth.getInstance();
         final View view = inflater.inflate(R.layout.fragment_admin_settings, container, false);
         issueDurationInputText=view.findViewById(R.id.issueDurationInputText);
@@ -148,10 +139,14 @@ public class AdminSettingsFragment extends Fragment {
                     message=message.concat("Passwords are not matching");
                     correct=false;
                 }
+                if(pwd.length()<6){
+                    message=message.concat("Password cannot be less than 6 characters");
+                    correct=false;
+                }
                 if(correct){
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-//                    db.collection("Admin").document(user.getUid()).update("password", pwd);
+                    db.collection("Admins").document(user.getUid()).update("password", pwd);
                     user.updatePassword(pwd)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

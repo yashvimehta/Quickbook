@@ -65,6 +65,10 @@ public class UserSettingsFragment extends Fragment {
                     message = message.concat("Passwords are not matching");
                     correct = false;
                 }
+                if(pwd.length()<6){
+                    message=message.concat("Password cannot be less than 6 characters");
+                    correct=false;
+                }
                 if (correct) {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();

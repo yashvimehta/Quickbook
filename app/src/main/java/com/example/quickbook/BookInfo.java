@@ -75,7 +75,8 @@ public class BookInfo extends AppCompatActivity {
         }
 
         noOfCopiesEditText=findViewById(R.id.noOfCopiesInputText);
-        //TODO Get data from Firebase and set
+        //TODO Get data from Firebase and set  if book doesnt exist, create a new book and set the copies as 0
+
         noOfCopiesEditText.setText("10");
         saveCopiesButton = findViewById(R.id.saveCopiesButton);
         
@@ -90,7 +91,8 @@ public class BookInfo extends AppCompatActivity {
                 public void onClick(View view) {
                     String noOfCopies = noOfCopiesEditText.getText().toString();
                     Toast.makeText(BookInfo.this, "No. of copies updated!", Toast.LENGTH_SHORT).show();
-                    //TODO Set value in Firebase
+                    //TODO update no of copies in firebase
+                    //TODO shouldn't be empty or <0
                 }
             });
         }

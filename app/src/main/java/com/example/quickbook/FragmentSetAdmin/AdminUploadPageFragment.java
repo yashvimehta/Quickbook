@@ -56,6 +56,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -192,87 +193,6 @@ public class AdminUploadPageFragment extends Fragment {
                         gotoResultButton.setVisibility(View.VISIBLE);
                         retryButton.setVisibility(View.INVISIBLE);
 
-                        String book_isbn = mResult.getIsbn();
-                        String book_name = mResult.getTitle();
-                        String member_id = mResult.getName();
-
-                        //create book
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        db.collection("Books")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        int val = 0;
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                String isbn = String.valueOf(document.getData().get("ISBN"));
-                                                if(book_isbn.equals(isbn)){  //if ISBN exists
-                                                    val++;
-                                                }
-                                            }
-                                            if(val==0){
-                                                addBook(book_isbn, book_name);  //add new book in DB if ISBN doesn't exist
-                                            }
-                                            else{  //update no of copies
-                                                db.collection("Books")
-                                                        .get()
-                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                int val = 0;
-                                                                if (task.isSuccessful()) {
-                                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                        if(String.valueOf(document.getData().get("ISBN")).equals(book_isbn)) {
-                                                                            String copies = String.valueOf(document.getData().get("Copies"));
-                                                                            document.getData().replace("Copies", Integer.valueOf(copies)-1);
-                                                                        }
-                                                                    }
-                                                                } else {
-                                                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                                                }
-                                                            }
-                                                        });
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });
-
-                        //create transaction
-                        Map<String, Object> mMap = new HashMap<>();
-                        mMap.put("bookISBN", book_isbn);
-                        mMap.put("bookName", book_name);
-                        mMap.put("issuerID", member_id);
-                        mMap.put("issuerDate", new Timestamp(new Date()));
-
-                        ///123456543234    + 1209600
-                        long unixTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 1209600;
-                        mMap.put("returnDate", new Timestamp(new Date(unixTime)));
-                        db.collection("Transactions").add(mMap);
-
-
-
-                        //add in user
-                        db.collection("Users")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        int val = 0;
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                String memberID = String.valueOf(document.getData().get("memberID"));
-                                                if(memberID.equals(member_id)){  //if ISBN exists
-                                                    document.getData().put("issuedBooks", FieldValue.arrayUnion(book_name));
-                                                }
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });
 
                     } else {
                         String text = "Failure";
@@ -457,6 +377,7 @@ public class AdminUploadPageFragment extends Fragment {
                     Toast.makeText(getContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    functions(isbn, title, name);
                     messageTextView.setText("Select or click an Image");
                     messageTextView.setVisibility(View.VISIBLE);
                     nameTextInputLayout.setVisibility(View.INVISIBLE);
@@ -517,6 +438,87 @@ public class AdminUploadPageFragment extends Fragment {
         mMap.put("ISBN", isbn);
         mMap.put("Copies", "0");
         db.collection("Books").add(mMap);
+    }
+
+    public void functions ( String book_isbn, String  book_name, String member_id){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Books")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int val = 0;
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String isbn = String.valueOf(document.getData().get("ISBN"));
+                                if(book_isbn.equals(isbn)){  //if ISBN exists
+                                    val++;
+                                }
+                            }
+                            if(val==0){
+                                addBook(book_isbn, book_name);  //add new book in DB if ISBN doesn't exist
+                            }
+                            else{  //update no of copies
+                                db.collection("Books")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                int val = 0;
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        if(String.valueOf(document.getData().get("ISBN")).equals(book_isbn)) {
+                                                            String copies = String.valueOf(document.getData().get("Copies"));
+                                                            document.getData().replace("Copies", Integer.valueOf(copies)-1);
+                                                        }
+                                                    }
+                                                } else {
+                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                                }
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        //create transaction
+        Map<String, Object> mMap = new HashMap<>();
+        mMap.put("bookISBN", book_isbn);
+        mMap.put("bookName", book_name);
+        mMap.put("issuerID", member_id);
+        mMap.put("issuerDate", new Timestamp(new Date()));
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 14);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE,59);
+        c.set(Calendar.SECOND,59);
+        mMap.put("returnDate", c.getTime());
+        db.collection("Transactions").add(mMap);
+
+        //add in user
+        db.collection("Users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String memberID = String.valueOf(document.getData().get("memberID"));
+                                if(memberID.equals(member_id)){  //if ISBN exists
+                                    ArrayList<String> arrayList = (ArrayList<String>) document.getData().get("issuedBooks");
+                                    arrayList.add(book_name);
+//                                    Log.i("booksIssued", String.valueOf(arrayList));
+                                    db.collection("Users").document(document.getId()).update("issuedBooks", arrayList);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
 }
