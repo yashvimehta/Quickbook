@@ -57,8 +57,8 @@ public class AdminSettingsFragment extends Fragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         //TODO Timestamp - below 2 lines update the "timeee" field in Rules document of firebase. While testing, go to settings in admin, and it'll be updated there.
-        long unixTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 1209600;
-        db.collection("Rules").document("ruless").update("timeee", unixTime);
+        long unixTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + 1209600; //code for timestamp 14 days after current
+        db.collection("Rules").document("ruless").update("timeee", new Timestamp(new Date(unixTime)));
 
 
         firebaseAuth = FirebaseAuth.getInstance();
