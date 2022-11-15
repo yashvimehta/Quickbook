@@ -43,8 +43,6 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
     boolean showLikes;
     Button endIssueButton;
     EditText setLateFeeEditText;
-    int lateFee;
-    String perDayFine;
 
     public CustomCardAdapter(@NonNull Context context, ArrayList<String[]> stringArrayList) {
         super(context, R.layout.custom_card, stringArrayList);
@@ -67,21 +65,7 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
         ID.setText("Member ID: "+mArrayList.get(position)[1] );
         returnDate.setText("Return Date: "+mArrayList.get(position)[2]);
 
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference rulesDocumentRef = db.collection("Rules").document("ruless");
-        rulesDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    perDayFine = (String) task.getResult().getData().get("fineAmount(perDay)");
-                }
-            }
-        });
-
-
-
-        Log.i("lateee", String.valueOf(lateFee));
 
         endIssueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +73,7 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                 LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AlertDialogTheme);
                 builder.setTitle("Set late fee amount");
+
                 final View customLayout = inflater.inflate(R.layout.alert_admin_set_fine, null);
                 builder.setView(customLayout);
                 builder.setPositiveButton(
@@ -115,37 +100,9 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                         dialogInterface.cancel();
                     }
                 });
-
-                // TODO M line 120 - 143 - get late fee. shows initial before
-                String documentID = mArrayList.get(position)[3];
-                DocumentReference transactionDocumentRef = db.collection("Transactions").document(documentID);
-                transactionDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Timestamp javaDate1 = (Timestamp) task.getResult().getData().get("returnDate");
-                            long returnTime =  javaDate1.getSeconds();;
-                            long currentTime = new Timestamp(new Date()).getSeconds();
-                            if(currentTime<=returnTime){
-                                lateFee = 0;
-                            }
-                            else{
-                                if( (  currentTime +19800) %86400 <  (returnTime +19800) %86400 ){
-                                    lateFee =  (Integer.parseInt(perDayFine) * ( 1 +( (int)(currentTime -  returnTime)/86400)));
-                                }
-                                else{
-                                    lateFee = (Integer.parseInt(perDayFine) * (((  (int) (currentTime -  returnTime))/86400)));
-
-                                }
-                            }
-                        }
-                    }
-                });
-
-
                 AlertDialog dialog = builder.create();
                 setLateFeeEditText = customLayout.findViewById(R.id.setLateFeeEditText);
-                setLateFeeEditText.setText(String.valueOf(lateFee));
+                setLateFeeEditText.setText(mArrayList.get(position)[4]);
                 dialog.show();
             }});
 

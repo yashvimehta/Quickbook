@@ -4,8 +4,10 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +22,15 @@ import com.example.quickbook.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class AdminIssuedBooksFragment extends Fragment {
@@ -34,10 +40,11 @@ public class AdminIssuedBooksFragment extends Fragment {
     CustomCardAdapter mCustomCardAdapter;
     Button searchButton;
     FirebaseFirestore db;
+    int perDayFine;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -49,21 +56,40 @@ public class AdminIssuedBooksFragment extends Fragment {
         searchByID = view.findViewById(R.id.searchByID);
         searchButton=view.findViewById(R.id.searchButton);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        DocumentReference rulesDocumentRef = db.collection("Rules").document("ruless");
+        rulesDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View view) {
-                String searchName = searchByID.getText().toString();
-                if(searchName.equals("")){
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    perDayFine=Integer.parseInt((String) task.getResult().getData().get("fineAmount(perDay)"));
+
+                    searchButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String searchName = searchByID.getText().toString();
+                                setAllData(searchName);
+                        }
+                    });
                     setAllData("");
                 }
-                else {
-                    setAllData(searchName);
-                }
+
             }
         });
-
-        setAllData("");
         return view;
+    }
+    public int getFine(Timestamp javaDate1){
+        int lateFee=0;
+        long returnTime =  javaDate1.getSeconds();
+        long currentTime = new Timestamp(new Date()).getSeconds();
+        if(currentTime>returnTime){
+            if( (currentTime +19800) %86400 <  (returnTime +19800) %86400 ){
+                lateFee =  (perDayFine * ( 1 +( (int)(currentTime -  returnTime)/86400)));
+            }
+            else{
+                lateFee = (perDayFine * (((  (int) (currentTime -  returnTime))/86400)));
+            }
+        }
+        return lateFee;
     }
 
     public void setAllData(String searchName){
@@ -75,6 +101,7 @@ public class AdminIssuedBooksFragment extends Fragment {
                         int val = 0;
                         if (task.isSuccessful()) {
                             ArrayList<String[]> stringArrayList=new ArrayList<String[]>();
+
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String bookName = String.valueOf(document.getData().get("bookName"));
                                 String issuerID = String.valueOf(document.getData().get("issuerID"));
@@ -84,14 +111,18 @@ public class AdminIssuedBooksFragment extends Fragment {
                                 String[] returnDate  = String.valueOf(javaDate).split(" GMT") ;
                                 String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
                                 String documentID = document.getId();
-                                if (  (searchName.equals("")||searchName.equals(issuerID))  && !endIssue ) {
-                                    stringArrayList.add(new String[]{bookName, issuerID, returnn, documentID});
+                                if ((searchName.equals("")||searchName.equals(issuerID))  && !endIssue ) {
+                                    String[] arrayListFeeder=new String[]{bookName, issuerID, returnn, documentID,String.valueOf(getFine(javaDate1)),String.valueOf(javaDate1.getSeconds())};
+                                    stringArrayList.add(arrayListFeeder);
                                     val++;
                                 }
                             }
                             if (val == 0) {
                                 Toast.makeText(getContext(), "Member ID not found", Toast.LENGTH_SHORT).show();
                             }
+                            sort(stringArrayList);
+
+
                             mCustomCardAdapter = new CustomCardAdapter(requireContext(),stringArrayList);
                             mListView.setAdapter(mCustomCardAdapter);
                         } else {
@@ -99,5 +130,17 @@ public class AdminIssuedBooksFragment extends Fragment {
                         }
                     }
                 });
+    }
+    public void sort(ArrayList<String[]> stringArrayList){
+        Collections.sort(stringArrayList, new Comparator<String[]>() {
+
+            @Override
+            public int compare(String[] s1, String[] s2) {
+                long s1Time = Long.valueOf(s1[5]);
+                long s2Time=Long.valueOf(s2[5]);
+                return (int)(s2Time-s1Time);
+            }
+        });
+
     }
 }
