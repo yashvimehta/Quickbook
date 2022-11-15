@@ -9,7 +9,8 @@ import com.example.quickbook.FragmentSetAdmin.SearchPageFragment;
 import com.example.quickbook.FragmentSetUser.UserIssuedBooksFragment;
 import com.example.quickbook.FragmentSetUser.UserSettingsFragment;
 
-public class UserFragmentAdapter extends FragmentPagerAdapter {
+public class
+UserFragmentAdapter extends FragmentPagerAdapter {
 
     public UserFragmentAdapter(FragmentManager fm)
     {

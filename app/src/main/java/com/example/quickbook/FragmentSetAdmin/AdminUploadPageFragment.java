@@ -96,6 +96,8 @@ public class AdminUploadPageFragment extends Fragment {
     TextInputLayout isbnTextInputLayout;
     EditText isbnInputText;
 
+    final String[] issueDuration = new String[1];
+
     @SuppressLint("StaticFieldLeak")
     static ProgressBar progressBar;
 
@@ -302,6 +304,17 @@ public class AdminUploadPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //get issue duration
+        DocumentReference rulesDocumentRef = db.collection("Rules").document("ruless");
+        rulesDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    issueDuration[0] = String.valueOf(task.getResult().getData().get("issueDuration(days)"));
+                }
+            }
+        });
+
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         assert mUser != null;
@@ -484,6 +497,7 @@ public class AdminUploadPageFragment extends Fragment {
                     }
                 });
 
+
         //create transaction
         Map<String, Object> mMap = new HashMap<>();
         mMap.put("bookISBN", book_isbn);
@@ -492,7 +506,7 @@ public class AdminUploadPageFragment extends Fragment {
         mMap.put("issuerDate", new Timestamp(new Date()));
         mMap.put("endIssue", false);
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 14);
+        c.add(Calendar.DATE, Integer.parseInt(issueDuration[0]));
         c.set(Calendar.HOUR_OF_DAY, 23);
         c.set(Calendar.MINUTE,59);
         c.set(Calendar.SECOND,59);
