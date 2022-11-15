@@ -101,13 +101,11 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                                     Toast.makeText(getContext(), "No fees charged", Toast.LENGTH_SHORT).show();
                                     String documentID = mArrayList.get(position)[3];
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
-                                    //TODO remove books from issue of user? ask M
                                 }
                                 else {
                                     Toast.makeText(getContext(), "Fees has been charged", Toast.LENGTH_SHORT).show();
                                     String documentID = mArrayList.get(position)[3];
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
-                                    //TODO send notification to user saying fee charged
                                 }
                                 }
                         });
@@ -118,7 +116,7 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                     }
                 });
 
-                //TODO line 120 - 143 - get late fee. shows initial before. ask M
+                // TODO M line 120 - 143 - get late fee. shows initial before
                 String documentID = mArrayList.get(position)[3];
                 DocumentReference transactionDocumentRef = db.collection("Transactions").document(documentID);
                 transactionDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

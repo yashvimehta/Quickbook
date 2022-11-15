@@ -42,7 +42,7 @@
                 android:paddingTop="5dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
-                android:text="14" />
+                android:text="loading..." />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

@@ -83,8 +83,6 @@ public class BookInfo extends AppCompatActivity {
         else{
             publishTextView.setVisibility(View.INVISIBLE);
         }
-
-        //TODO ask M shows 14 first and then updated
         noOfCopiesEditText=findViewById(R.id.noOfCopiesInputText);
 
 
