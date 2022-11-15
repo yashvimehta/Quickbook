@@ -17,8 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".BookInfo" android:screenOrientation="portrait"></activity>
-        <activity android:name=".UserHomePage" android:screenOrientation="portrait"/>
+        <activity android:name=".BookInfo" android:exported="true" android:screenOrientation="portrait"></activity>
+        <activity android:name=".UserHomePage" android:exported="true" android:screenOrientation="portrait"/>
         <activity
             android:name=".AdminHomePage"
             android:exported="true"
@@ -41,9 +41,9 @@
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:exported="true" android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category  android:exported="true" android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -62,7 +62,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+
+        <service android:name=".FirebaseReceiver" android:exported="true">
+            <intent-filter>
+                <action android:exported="true" android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
+            android:exported="true"
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
 

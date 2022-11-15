@@ -41,9 +41,6 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
 
     Context mContext;
     ArrayList<String[]>mArrayList;
-    boolean showLikes;
-    Button endIssueButton;
-    EditText setLateFeeEditText;
     Button payFine;
 
     public UserCustomCardAdapter(@NonNull Context context, ArrayList<String[]> stringArrayList) {
