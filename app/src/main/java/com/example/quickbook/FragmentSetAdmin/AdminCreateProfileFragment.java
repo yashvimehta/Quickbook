@@ -181,7 +181,7 @@ public class AdminCreateProfileFragment extends Fragment {
                     imageView.setImageResource(R.drawable.logo);
                     registerButton.setVisibility(View.INVISIBLE);
                     messageTextView.setVisibility(View.VISIBLE);
-
+                    Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.INVISIBLE);
 
 
@@ -384,7 +384,7 @@ public class AdminCreateProfileFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getContext(), "Member registered successfully", Toast.LENGTH_SHORT).show();
                                     }
                                     else{
                                         Log.i("FAIL", "Sign Up failed " + task.getException());
