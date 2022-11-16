@@ -96,9 +96,9 @@ public class UserIssuedBooksFragment extends Fragment {
                                 String bookName = String.valueOf(document.getData().get("bookName"));
                                 String issuerID = String.valueOf(document.getData().get("issuerID"));
                                 Boolean endIssue = Boolean.valueOf(String.valueOf(document.getData().get("endIssue")));
-                                int value=0;
+                                String value="0";
                                 if (endIssue){
-                                    value=Integer.parseInt(String.valueOf(document.getData().get("feeValue")));
+                                    value=String.valueOf(document.getData().get("feeValue"));
                                     Log.i("Fees",bookName+":"+String.valueOf(value));
                                 }
                                 Timestamp javaDate1 = (Timestamp) document.getData().get("returnDate");
@@ -106,8 +106,7 @@ public class UserIssuedBooksFragment extends Fragment {
                                 String[] returnDate  = String.valueOf(javaDate).split(" GMT") ;
                                 String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
                                 if (issuerID.equals(memberid[0])) {
-                                    //Pass document ID
-                                    String[] arrayListFeeder=new String[]{bookName, returnn,  String.valueOf(value)};
+                                    String[] arrayListFeeder=new String[]{bookName, returnn, value, String.valueOf(javaDate1.getSeconds()),document.getId()};
                                     stringArrayList.add(arrayListFeeder);
                                     val++;
                                 }

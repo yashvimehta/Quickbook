@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.razorpay.PaymentResultListener;
 
+import static com.example.quickbook.FragmentSetUser.UserCustomCardAdapter.rzpButton;
 import static com.example.quickbook.FragmentSetUser.UserCustomCardAdapter.rzpID;
 
 
@@ -40,13 +43,13 @@ public class UserHomePage extends AppCompatActivity implements PaymentResultList
 
     @Override
     public void onPaymentSuccess(String s) {
-        Toast.makeText(this, "Payment is successful : " + s, Toast.LENGTH_SHORT).show();
-        //TODO Uncomment below
-        //db.collection("Transactions").document(documentID).update("feeValue",0);
+        Toast.makeText(this, "Payment Successful: ID: " + s, Toast.LENGTH_LONG).show();
+        db.collection("Transactions").document(rzpID).update("feeValue",0);
+        rzpButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onPaymentError(int i, String s) {
-        Toast.makeText(this, "Payment Failed due to error : " + s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Payment Failed: " + s, Toast.LENGTH_LONG).show();
     }
 }
