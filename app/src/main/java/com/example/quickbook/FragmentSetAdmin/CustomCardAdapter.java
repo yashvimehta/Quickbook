@@ -75,11 +75,14 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                                     Toast.makeText(getContext(), "No fees charged", Toast.LENGTH_SHORT).show();
                                     String documentID = mArrayList.get(position)[3];
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
+                                    db.collection("Transactions").document(documentID).update("feeValue", 0);
                                 }
                                 else {
                                     Toast.makeText(getContext(), "Fees has been charged", Toast.LENGTH_SHORT).show();
                                     String documentID = mArrayList.get(position)[3];
+                                    int feeValueDB=Integer.parseInt(setLateFeeEditText.getText().toString());
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
+                                    db.collection("Transactions").document(documentID).update("feeValue", feeValueDB);
                                 }
                                 }
                         });

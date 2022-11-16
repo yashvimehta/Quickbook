@@ -41,7 +41,7 @@ public class UserIssuedBooksFragment extends Fragment {
     ListView mListView;
     UserCustomCardAdapter mUserCustomCardAdapter;
     final String[] memberid = new String[1];
-
+    public static String docID;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +61,28 @@ public class UserIssuedBooksFragment extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     memberid[0] = String.valueOf(task.getResult().getData().get("memberID"));
+                    setData();
                 }
             }
         });
         super.onViewCreated(view, savedInstanceState);
+
+
+        return view;
+    }
+
+    public void sort(ArrayList<String[]> stringArrayList){
+        Collections.sort(stringArrayList, new Comparator<String[]>() {
+
+            @Override
+            public int compare(String[] s1, String[] s2) {
+                long s1Time = Long.valueOf(s1[3]);
+                long s2Time=Long.valueOf(s2[3]);
+                return (int)(s2Time-s1Time);
+            }
+        });}
+
+    public void setData(){
         db.collection("Transactions")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -78,12 +96,17 @@ public class UserIssuedBooksFragment extends Fragment {
                                 String bookName = String.valueOf(document.getData().get("bookName"));
                                 String issuerID = String.valueOf(document.getData().get("issuerID"));
                                 Boolean endIssue = Boolean.valueOf(String.valueOf(document.getData().get("endIssue")));
+                                int value=0;
+                                if (endIssue){
+                                    value=Integer.parseInt(String.valueOf(document.getData().get("feeValue")));
+                                    Log.i("Fees",bookName+":"+String.valueOf(value));
+                                }
                                 Timestamp javaDate1 = (Timestamp) document.getData().get("returnDate");
                                 Date javaDate = javaDate1.toDate();
                                 String[] returnDate  = String.valueOf(javaDate).split(" GMT") ;
                                 String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
-                                if (issuerID.equals(memberid[0])  && !endIssue ) {
-                                    String[] arrayListFeeder=new String[]{bookName, returnn,  getLatePay(javaDate1), String.valueOf(javaDate1.getSeconds())};
+                                if (issuerID.equals(memberid[0])) {
+                                    String[] arrayListFeeder=new String[]{bookName, returnn,  String.valueOf(value), String.valueOf(javaDate1.getSeconds())};
                                     stringArrayList.add(arrayListFeeder);
                                     val++;
                                 }
@@ -91,6 +114,7 @@ public class UserIssuedBooksFragment extends Fragment {
                             if (val == 0) {
                                 Toast.makeText(getContext(), "No books issued", Toast.LENGTH_SHORT).show();
                             }
+                            Log.i("Length",String.valueOf(stringArrayList.size()));
                             sort(stringArrayList);
 
                             mUserCustomCardAdapter = new UserCustomCardAdapter(requireContext(),stringArrayList);
@@ -100,29 +124,5 @@ public class UserIssuedBooksFragment extends Fragment {
                         }
                     }
                 });
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    }
-    public void sort(ArrayList<String[]> stringArrayList){
-        Collections.sort(stringArrayList, new Comparator<String[]>() {
-
-            @Override
-            public int compare(String[] s1, String[] s2) {
-                long s1Time = Long.valueOf(s1[3]);
-                long s2Time=Long.valueOf(s2[3]);
-                return (int)(s2Time-s1Time);
-            }
-        });}
-    public String getLatePay(Timestamp javaDate1){
-        long returnTime =  javaDate1.getSeconds();
-        long currentTime = new Timestamp(new Date()).getSeconds();
-        if(currentTime>returnTime){
-            return "true";
-        }
-        return "false";
     }
 }
