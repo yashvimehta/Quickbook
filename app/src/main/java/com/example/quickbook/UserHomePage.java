@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.razorpay.PaymentResultListener;
 
-import static com.example.quickbook.FragmentSetUser.UserCustomCardAdapter.paymentSuccessful;
+import static com.example.quickbook.FragmentSetUser.UserCustomCardAdapter.rzpID;
 
 
 public class UserHomePage extends AppCompatActivity implements PaymentResultListener {
@@ -40,14 +40,13 @@ public class UserHomePage extends AppCompatActivity implements PaymentResultList
 
     @Override
     public void onPaymentSuccess(String s) {
-        // this method is called on payment success.
         Toast.makeText(this, "Payment is successful : " + s, Toast.LENGTH_SHORT).show();
-        //db.collection("Transactions").document(documentID).update("endIssue", true);
+        //TODO Uncomment below
+        //db.collection("Transactions").document(documentID).update("feeValue",0);
     }
 
     @Override
     public void onPaymentError(int i, String s) {
-        // on payment failed.
         Toast.makeText(this, "Payment Failed due to error : " + s, Toast.LENGTH_SHORT).show();
     }
 }

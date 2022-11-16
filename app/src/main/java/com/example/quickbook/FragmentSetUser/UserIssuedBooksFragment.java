@@ -106,7 +106,8 @@ public class UserIssuedBooksFragment extends Fragment {
                                 String[] returnDate  = String.valueOf(javaDate).split(" GMT") ;
                                 String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
                                 if (issuerID.equals(memberid[0])) {
-                                    String[] arrayListFeeder=new String[]{bookName, returnn,  String.valueOf(value), String.valueOf(javaDate1.getSeconds())};
+                                    //Pass document ID
+                                    String[] arrayListFeeder=new String[]{bookName, returnn,  String.valueOf(value)};
                                     stringArrayList.add(arrayListFeeder);
                                     val++;
                                 }

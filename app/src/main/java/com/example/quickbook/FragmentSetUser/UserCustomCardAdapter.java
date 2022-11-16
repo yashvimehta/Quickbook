@@ -34,7 +34,7 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
     Context mContext;
     ArrayList<String[]>mArrayList;
     Button payFine;
-    public static boolean paymentSuccessful;
+    public static String rzpID;
     public UserCustomCardAdapter(@NonNull Context context, ArrayList<String[]> stringArrayList) {
         super(context, R.layout.custom_card, stringArrayList);
         this.mContext = context;
@@ -54,12 +54,15 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
         payFine = view.findViewById(R.id.payFine);
         returnDate.setText("Return Date: "+mArrayList.get(position)[1]);
         int fineAmount=Integer.parseInt(mArrayList.get(position)[2]);
+
         if(fineAmount!=0){
             payFine.setVisibility(View.VISIBLE);
             payFine.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     try {
+                        //TODO Uncomment below
+                        //rzpID=mArrayList.get(position)[3];
                         transact(fineAmount);
                     }
                     catch(Exception e) {}
