@@ -41,6 +41,7 @@ public class AdminIssuedBooksFragment extends Fragment {
     Button searchButton;
     FirebaseFirestore db;
     int perDayFine;
+    final String[] vall = new String[2];
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -50,8 +51,18 @@ public class AdminIssuedBooksFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_admin_issued_books, container, false);
-
         db= FirebaseFirestore.getInstance();
+        DocumentReference rulesDocumentRef1 = db.collection("Rules").document("ruless");
+        rulesDocumentRef1.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    vall[0] = String.valueOf(task.getResult().getData().get("consecutiveIssuals"));
+                    vall[1] = String.valueOf(task.getResult().getData().get("issueDuration(days)"));
+                }
+            }
+        });
+
         mListView = view.findViewById(R.id.issuedBooks);
         searchByID = view.findViewById(R.id.searchByID);
         searchButton=view.findViewById(R.id.searchButton);
@@ -105,6 +116,7 @@ public class AdminIssuedBooksFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String bookName = String.valueOf(document.getData().get("bookName"));
                                 String issuerID = String.valueOf(document.getData().get("issuerID"));
+                                String reIssue = String.valueOf(document.getData().get("reIssue"));
                                 Boolean endIssue = Boolean.valueOf(String.valueOf(document.getData().get("endIssue")));
                                 Timestamp javaDate1 = (Timestamp) document.getData().get("returnDate");
                                 Date javaDate = javaDate1.toDate();
@@ -112,7 +124,7 @@ public class AdminIssuedBooksFragment extends Fragment {
                                 String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
                                 String documentID = document.getId();
                                 if ((searchName.equals("")||searchName.equals(issuerID))  && !endIssue ) {
-                                    String[] arrayListFeeder=new String[]{bookName, issuerID, returnn, documentID,String.valueOf(getFine(javaDate1)),String.valueOf(javaDate1.getSeconds())};
+                                    String[] arrayListFeeder=new String[]{bookName, issuerID, returnn, documentID,String.valueOf(getFine(javaDate1)),String.valueOf(javaDate1.getSeconds()), reIssue, vall[0], vall[1] };
                                     stringArrayList.add(arrayListFeeder);
                                     val++;
                                 }
@@ -143,4 +155,7 @@ public class AdminIssuedBooksFragment extends Fragment {
         });
 
     }
+//    public String getreIssuePeriod(){
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    }
 }
