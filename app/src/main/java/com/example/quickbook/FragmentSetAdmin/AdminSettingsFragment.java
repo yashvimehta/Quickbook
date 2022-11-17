@@ -77,7 +77,6 @@ public class AdminSettingsFragment extends Fragment {
                 }
             }
         });
-        //fetch from db
 
         pwdInputText=view.findViewById(R.id.pwdInputText);
         confirmPwdInputText=view.findViewById(R.id.confirmPwdInputText);

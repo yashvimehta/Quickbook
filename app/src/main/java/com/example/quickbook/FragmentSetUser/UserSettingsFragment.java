@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -30,7 +33,9 @@ public class UserSettingsFragment extends Fragment {
     EditText confirmPwdInputText;
     Button editProfileButton;
     FirebaseAuth firebaseAuth;
-
+    EditText issueDurationInputText;
+    EditText consecutiveIssualsInputText;
+    EditText fineInputText;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -39,6 +44,27 @@ public class UserSettingsFragment extends Fragment {
         confirmPwdInputText = view.findViewById(R.id.confirmPwdInputText);
         editProfileButton = view.findViewById(R.id.editProfileButton);
         logoutButton = view.findViewById(R.id.logoutButton);
+
+
+        issueDurationInputText=view.findViewById(R.id.issueDurationInputText);
+        consecutiveIssualsInputText=view.findViewById(R.id.consecutiveIssualsInputText);
+        fineInputText=view.findViewById(R.id.fineInputText);
+        issueDurationInputText.setInputType(InputType.TYPE_NULL);
+        fineInputText.setInputType(InputType.TYPE_NULL);
+        consecutiveIssualsInputText.setInputType(InputType.TYPE_NULL);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference rulesDocumentRef = db.collection("Rules").document("ruless");
+        rulesDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    consecutiveIssualsInputText.setText(String.valueOf(task.getResult().getData().get("consecutiveIssuals")));
+                    issueDurationInputText.setText(String.valueOf(task.getResult().getData().get("issueDuration(days)")));
+                    fineInputText.setText(String.valueOf(task.getResult().getData().get("fineAmount(perDay)")));
+                }
+            }
+        });
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
