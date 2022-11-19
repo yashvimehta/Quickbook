@@ -13,8 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.quickbook.FragmentSetAdmin.CustomCardAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -22,15 +20,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     public static boolean isAdmin;
@@ -54,20 +47,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseAuth = FirebaseAuth.getInstance();
-//        if (firebaseAuth.getCurrentUser() != null) {
-//            launchHomeActivity();
-//        }
+
         editTextEmail = findViewById(R.id.editTextLogInEmailAddress);
         editTextPasswordLogin = findViewById(R.id.editTextLogInPassword);
 
 
     }
 
-    public void toSignUp(View view){
-        Intent intent = new Intent(MainActivity.this, SignUp.class);
-        startActivity(intent);
-        finish();
-    }
 
     public void doLogin(View view) {
         String email = editTextEmail.getText().toString();
@@ -83,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-//                                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                                assert user != null;
+
                                 Log.i("SUCCESS", "Logged in " );
                                 isAdmin=false;
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();

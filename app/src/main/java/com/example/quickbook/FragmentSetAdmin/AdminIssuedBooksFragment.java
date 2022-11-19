@@ -155,7 +155,4 @@ public class AdminIssuedBooksFragment extends Fragment {
         });
 
     }
-//    public String getreIssuePeriod(){
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    }
 }

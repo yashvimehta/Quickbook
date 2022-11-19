@@ -223,7 +223,6 @@ public class AdminCreateProfileFragment extends Fragment {
 
         // Image using camera
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Log.i("12345",data.getExtras().toString());
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             //Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
 

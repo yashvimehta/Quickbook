@@ -158,7 +158,6 @@ public class BookInfo extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 if(String.valueOf(document.getData().get("ISBN")).equals(finalBookData[6])) {
-                                                    Log.i("copiesss",noOfCopies);
                                                     db.collection("Books").document(document.getId()).update("Copies", noOfCopies);
                                                 }
                                             }

@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.quickbook.MainActivity;
 import com.example.quickbook.R;
-import com.example.quickbook.SignUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -31,13 +30,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 
 public class AdminSettingsFragment extends Fragment {
@@ -51,8 +43,6 @@ public class AdminSettingsFragment extends Fragment {
     Button editProfileButton;
 
     FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,7 +141,7 @@ public class AdminSettingsFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Log.d("YAYAY", "Password address updated.");
+                                        Log.d("Password Success", "Password address updated.");
                                     }
                                 }
                             });

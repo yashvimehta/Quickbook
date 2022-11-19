@@ -33,7 +33,6 @@ import com.example.quickbook.ApiHelper.ApiInterface;
 import com.example.quickbook.ApiHelper.BFResult;
 import com.example.quickbook.AdminHomePage;
 import com.example.quickbook.R;
-import com.example.quickbook.SignUp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -265,7 +264,6 @@ public class AdminUploadPageFragment extends Fragment {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Log.i("12345",data.getExtras().toString());
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            //Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
 
             Uri tempUri = saveBitmapImage(getContext(), photo);
             CropImage.activity(tempUri)
