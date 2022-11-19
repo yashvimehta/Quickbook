@@ -33,6 +33,7 @@ import com.razorpay.PaymentResultListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,10 +42,12 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
 
     Context mContext;
     ArrayList<String[]>mArrayList;
-    Button payFine, reIssueButton;
+    Button payFine;
+    Button reIssueButton;
     FirebaseFirestore db;
     public static String rzpID;
     public static Button rzpButton;
+    public static Button riButton;
     public UserCustomCardAdapter(@NonNull Context context, ArrayList<String[]> stringArrayList) {
         super(context, R.layout.custom_card, stringArrayList);
         this.mContext = context;
@@ -67,8 +70,8 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
         db = FirebaseFirestore.getInstance();
         reIssueButton = view.findViewById(R.id.reIssue);
 
-
-        if(mArrayList.get(position)[9].equals("true") ||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])){
+ //||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])
+        if(mArrayList.get(position)[9].equals("true")||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])){
             reIssueButton.setVisibility(View.INVISIBLE);
         }
 
@@ -105,22 +108,29 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
                                 int val = Integer.parseInt(String.valueOf(task.getResult().getData().get("reIssue")));
-                                db.collection("Transactions").document(mArrayList.get(position)[4]).update("reIssue",val+1 );
+                                db.collection("Transactions").document(mArrayList.get(position)[4]).update("reIssue",String.valueOf(val+1) );
                                 db.collection("Transactions").document(mArrayList.get(position)[4]).update("issuerDate",new Timestamp(new Date()));
+                                Log.i("Checking","Before if"+String.valueOf(val)+"i"+mArrayList.get(position)[7]+"i"+String.valueOf(val+1==Integer.parseInt(mArrayList.get(position)[7])));
+
                                 if (val+1==Integer.parseInt(mArrayList.get(position)[7])){
                                     reIssueButton.setVisibility(View.INVISIBLE);
+
+                                    Log.i("Checking","inside if"+reIssueButton.getVisibility());
                                 }
+                                //update return date
+                                Calendar c = Calendar.getInstance();
+                                c.add(Calendar.DATE, Integer.parseInt(mArrayList.get(position)[8]));
+                                c.set(Calendar.HOUR_OF_DAY, 23);
+                                c.set(Calendar.MINUTE,59);
+                                c.set(Calendar.SECOND,59);
+                                db.collection("Transactions").document(mArrayList.get(position)[4]).update("returnDate",c.getTime());
+                                String dat=new SimpleDateFormat("EEE MMM dd").format(c.getTime());
+                                returnDate.setText("Return Date: "+dat);
                             }
                         }
                     });
 
-                    //update return date
-                    Calendar c = Calendar.getInstance();
-                    c.add(Calendar.DATE, Integer.parseInt(mArrayList.get(position)[8]));
-                    c.set(Calendar.HOUR_OF_DAY, 23);
-                    c.set(Calendar.MINUTE,59);
-                    c.set(Calendar.SECOND,59);
-                    db.collection("Transactions").document(mArrayList.get(position)[4]).update("returnDate",c.getTime());
+
 
                     Toast.makeText(getContext(), "Book Re-Issued! ", Toast.LENGTH_SHORT).show();
                 }
