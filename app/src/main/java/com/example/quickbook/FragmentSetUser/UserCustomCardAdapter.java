@@ -70,8 +70,7 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
         db = FirebaseFirestore.getInstance();
         reIssueButton = view.findViewById(R.id.reIssue);
 
- //||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])
-        if(mArrayList.get(position)[9].equals("true")||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])){
+         if(mArrayList.get(position)[9].equals("true")||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])){
             reIssueButton.setVisibility(View.INVISIBLE);
         }
 
@@ -96,9 +95,11 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
             @Override
             public void onClick(View view) {
                 LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                Button reIssueButton2=view.findViewById(R.id.reIssue);
+
                 Log.i("Reissue",Integer.parseInt(mArrayList.get(position)[6] )+" "+Integer.parseInt(mArrayList.get(position)[7]));
                 if( Integer.parseInt(mArrayList.get(position)[6] ) ==  Integer.parseInt(mArrayList.get(position)[7]) ){
-                    reIssueButton.setVisibility(View.INVISIBLE);
+                    reIssueButton2.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Cannot reissue books more than " + mArrayList.get(position)[7]+ " times. ", Toast.LENGTH_SHORT).show();
                 }
                 else{ //re issue book
@@ -113,8 +114,7 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
                                 Log.i("Checking","Before if"+String.valueOf(val)+"i"+mArrayList.get(position)[7]+"i"+String.valueOf(val+1==Integer.parseInt(mArrayList.get(position)[7])));
 
                                 if (val+1==Integer.parseInt(mArrayList.get(position)[7])){
-                                    reIssueButton.setVisibility(View.INVISIBLE);
-
+                                    reIssueButton2.setVisibility(View.INVISIBLE);
                                     Log.i("Checking","inside if"+reIssueButton.getVisibility());
                                 }
                                 //update return date
