@@ -366,20 +366,15 @@ public class AdminCreateProfileFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.i("heyyy1", "heyyy1");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Log.i("heyyy2", "heyyy2");
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            Log.i("heyyy3", "heyyy3");
                             Map<String, Object> mMap = new HashMap<>();
                             mMap.put("email", email);
-                            mMap.put("memberId", memberId);
+                            mMap.put("memberID", memberId);
                             mMap.put("password", memberId);
                             mMap.put("issuedBooks", new ArrayList<String>());
                             mMap.put("Name", "name" );
-                            Log.i("heyyy4", "heyyy4");
                             assert user != null;
-                            Log.i("heyyy5", "heyyy5");
                             db.collection("Users").document(user.getUid()).set(mMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
