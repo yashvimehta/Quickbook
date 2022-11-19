@@ -68,7 +68,7 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
         reIssueButton = view.findViewById(R.id.reIssue);
 
 
-        if(mArrayList.get(position)[9].equals("true")){
+        if(mArrayList.get(position)[9].equals("true") ||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])){
             reIssueButton.setVisibility(View.INVISIBLE);
         }
 
@@ -95,7 +95,7 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
                 LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 Log.i("Reissue",Integer.parseInt(mArrayList.get(position)[6] )+" "+Integer.parseInt(mArrayList.get(position)[7]));
                 if( Integer.parseInt(mArrayList.get(position)[6] ) ==  Integer.parseInt(mArrayList.get(position)[7]) ){
-
+                    reIssueButton.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Cannot reissue books more than " + mArrayList.get(position)[7]+ " times. ", Toast.LENGTH_SHORT).show();
                 }
                 else{ //re issue book
@@ -107,6 +107,9 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
                                 int val = Integer.parseInt(String.valueOf(task.getResult().getData().get("reIssue")));
                                 db.collection("Transactions").document(mArrayList.get(position)[4]).update("reIssue",val+1 );
                                 db.collection("Transactions").document(mArrayList.get(position)[4]).update("issuerDate",new Timestamp(new Date()));
+                                if (val+1==Integer.parseInt(mArrayList.get(position)[7])){
+                                    reIssueButton.setVisibility(View.INVISIBLE);
+                                }
                             }
                         }
                     });

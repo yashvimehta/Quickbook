@@ -14,8 +14,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="401dp"
-        android:layout_height="wrap_content"
-        android:paddingBottom="5dp">
+        android:layout_height="wrap_content">
 
         <!--Text View to display Course Name-->
 
@@ -49,7 +48,7 @@
         <Button
             android:id="@+id/payFine"
             android:layout_width="101dp"
-            android:layout_height="30dp"
+            android:layout_height="43dp"
             android:layout_marginTop="13dp"
             android:layout_marginEnd="26dp"
             android:background="@drawable/custom_button"
@@ -65,14 +64,14 @@
         <Button
             android:id="@+id/reIssue"
             android:layout_width="101dp"
-            android:layout_height="30dp"
+            android:layout_height="43dp"
             android:layout_marginStart="19dp"
-            android:layout_marginTop="8dp"
             android:background="@drawable/custom_button"
             android:text="Re-Issue Book"
             android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/returnDate"
-            app:layout_constraintTop_toBottomOf="@+id/payFine"
+            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
 
