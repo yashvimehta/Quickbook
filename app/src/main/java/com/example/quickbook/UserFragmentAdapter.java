@@ -25,10 +25,10 @@ UserFragmentAdapter extends FragmentPagerAdapter {
             return new UserSettingsFragment();
         }
         else if (position ==1){
-            return new SearchPageFragment();
+            return new UserIssuedBooksFragment();
         }
         else {
-            return new UserIssuedBooksFragment();
+            return new SearchPageFragment();
         }
     }
 

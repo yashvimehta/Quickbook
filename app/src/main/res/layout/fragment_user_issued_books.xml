@@ -12,13 +12,13 @@
         android:background="@drawable/background_gradient">
 
         <TextView
-            android:id="@+id/acknowldegement"
+            android:id="@+id/issuedBooksTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:text="Currently Issued Books"
+            android:text="Issued Books"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/acknowldegement"
+            app:layout_constraintTop_toBottomOf="@+id/issuedBooksTitle"
             app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
