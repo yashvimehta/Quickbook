@@ -62,11 +62,9 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
         TextView ID = view.findViewById(R.id.ID);
         TextView returnDate = view.findViewById(R.id.returnDate);
         endIssueButton=view.findViewById(R.id.endIssue);
-        reIssueButton = view.findViewById(R.id.reIssue);
         bookName.setText(mArrayList.get(position)[0]);
         ID.setText("Member ID: "+mArrayList.get(position)[1] );
         returnDate.setText("Return Date: "+mArrayList.get(position)[2]);
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         endIssueButton.setOnClickListener(new View.OnClickListener() {

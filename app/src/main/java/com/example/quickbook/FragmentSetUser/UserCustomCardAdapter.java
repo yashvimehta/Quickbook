@@ -67,6 +67,11 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
         db = FirebaseFirestore.getInstance();
         reIssueButton = view.findViewById(R.id.reIssue);
 
+
+        if(mArrayList.get(position)[9].equals("true")){
+            reIssueButton.setVisibility(View.INVISIBLE);
+        }
+
         if(fineAmount!=0){
             payFine.setVisibility(View.VISIBLE);
             payFine.setOnClickListener(new View.OnClickListener() {
