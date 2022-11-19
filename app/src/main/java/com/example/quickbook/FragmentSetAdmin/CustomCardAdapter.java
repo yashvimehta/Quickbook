@@ -89,7 +89,6 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                                     String documentID = mArrayList.get(position)[3];
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
                                     db.collection("Transactions").document(documentID).update("feeValue", 0);
-                                    //TODO increment no of copies in books
                                     incrementBook(mArrayList.get(position)[1]);
                                 }
                                 else {
@@ -98,6 +97,7 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                                     int feeValueDB=Integer.parseInt(setLateFeeEditText.getText().toString());
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
                                     db.collection("Transactions").document(documentID).update("feeValue", feeValueDB);
+                                    incrementBook(mArrayList.get(position)[1]);
                                 }
                                 }
                         });
