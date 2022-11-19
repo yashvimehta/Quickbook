@@ -1,5 +1,7 @@
 package com.example.quickbook.FragmentSetAdmin;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +28,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 //import com.google.firebase.storage.FirebaseStorage;
 //import com.google.firebase.storage.StorageReference;
 
@@ -85,6 +89,8 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                                     String documentID = mArrayList.get(position)[3];
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
                                     db.collection("Transactions").document(documentID).update("feeValue", 0);
+                                    //TODO increment no of copies in books
+                                    incrementBook(mArrayList.get(position)[1]);
                                 }
                                 else {
                                     Toast.makeText(getContext(), "Fees has been charged", Toast.LENGTH_SHORT).show();
@@ -148,6 +154,27 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
 
             }});
         return view;
+    }
+    public void incrementBook(String id){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Books")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if(String.valueOf(document.getData().get("ISBN")).equals(id)){
+                                    String copies = String.valueOf(document.getData().get("Copies"));
+                                    int newCopies = Integer.parseInt(copies ) + 1;
+                                    db.collection("Books").document(document.getId()).update("Copies", newCopies);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }
 
