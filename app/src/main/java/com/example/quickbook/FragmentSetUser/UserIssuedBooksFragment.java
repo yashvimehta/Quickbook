@@ -41,6 +41,8 @@ public class UserIssuedBooksFragment extends Fragment {
     ListView mListView;
     UserCustomCardAdapter mUserCustomCardAdapter;
     final String[] memberid = new String[1];
+    final String[] vall = new String[2];
+    int perDayFine;
     public static String docID;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,16 @@ public class UserIssuedBooksFragment extends Fragment {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         db= FirebaseFirestore.getInstance();
         DocumentReference userDocumentRef = db.collection("Users").document(user.getUid());
+        DocumentReference rulesDocumentRef1 = db.collection("Rules").document("ruless");
+        rulesDocumentRef1.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    vall[0] = String.valueOf(task.getResult().getData().get("consecutiveIssuals"));
+                    vall[1] = String.valueOf(task.getResult().getData().get("issueDuration(days)"));
+                }
+            }
+        });
         userDocumentRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -95,6 +107,7 @@ public class UserIssuedBooksFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String bookName = String.valueOf(document.getData().get("bookName"));
                                 String issuerID = String.valueOf(document.getData().get("issuerID"));
+                                String reIssue = String.valueOf(document.getData().get("reIssue"));
                                 Boolean endIssue = Boolean.valueOf(String.valueOf(document.getData().get("endIssue")));
                                 String value="0";
                                 if (endIssue){
@@ -106,7 +119,7 @@ public class UserIssuedBooksFragment extends Fragment {
                                 String[] returnDate  = String.valueOf(javaDate).split(" GMT") ;
                                 String returnn = returnDate[0].substring(0, returnDate[0].length() - 9);
                                 if (issuerID.equals(memberid[0])) {
-                                    String[] arrayListFeeder=new String[]{bookName, returnn, value, String.valueOf(javaDate1.getSeconds()),document.getId()};
+                                    String[] arrayListFeeder=new String[]{bookName, returnn, value, String.valueOf(javaDate1.getSeconds()),document.getId(), String.valueOf(getFine(javaDate1)), reIssue, vall[0], vall[1], String.valueOf(endIssue)};
                                     stringArrayList.add(arrayListFeeder);
                                     val++;
                                 }
@@ -124,5 +137,19 @@ public class UserIssuedBooksFragment extends Fragment {
                         }
                     }
                 });
+    }
+    public int getFine(Timestamp javaDate1){
+        int lateFee=0;
+        long returnTime =  javaDate1.getSeconds();
+        long currentTime = new Timestamp(new Date()).getSeconds();
+        if(currentTime>returnTime){
+            if( (currentTime +19800) %86400 <  (returnTime +19800) %86400 ){
+                lateFee =  (perDayFine * ( 1 +( (int)(currentTime -  returnTime)/86400)));
+            }
+            else{
+                lateFee = (perDayFine * (((  (int) (currentTime -  returnTime))/86400)));
+            }
+        }
+        return lateFee;
     }
 }
