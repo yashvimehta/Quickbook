@@ -93,28 +93,23 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
             @Override
             public void onClick(View view) {
                 LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                if (Integer.parseInt(mArrayList.get(position)[4])!=0){
-                    Toast.makeText(getContext(), "Cannot reissue books when fee is pending. ", Toast.LENGTH_SHORT).show();
-                }
-                else if( Integer.parseInt(mArrayList.get(position)[6] ) ==  Integer.parseInt(mArrayList.get(position)[7]) ){
+                Log.i("Reissue",Integer.parseInt(mArrayList.get(position)[6] )+" "+Integer.parseInt(mArrayList.get(position)[7]));
+                if( Integer.parseInt(mArrayList.get(position)[6] ) ==  Integer.parseInt(mArrayList.get(position)[7]) ){
+
                     Toast.makeText(getContext(), "Cannot reissue books more than " + mArrayList.get(position)[7]+ " times. ", Toast.LENGTH_SHORT).show();
                 }
                 else{ //re issue book
-                    final int[] val = {0};
-                    DocumentReference reIssue = db.collection("Transactions").document(mArrayList.get(position)[3]);
+                    DocumentReference reIssue = db.collection("Transactions").document(mArrayList.get(position)[4]);
                     reIssue.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
-                                val[0] = Integer.parseInt(String.valueOf(task.getResult().getData().get("reIssue")));
+                                int val = Integer.parseInt(String.valueOf(task.getResult().getData().get("reIssue")));
+                                db.collection("Transactions").document(mArrayList.get(position)[4]).update("reIssue",val+1 );
+                                db.collection("Transactions").document(mArrayList.get(position)[4]).update("issuerDate",new Timestamp(new Date()));
                             }
                         }
                     });
-                    //increment reissue number
-                    db.collection("Transactions").document(mArrayList.get(position)[3]).update("reIssue",val[0]+1 );
-
-                    //update issuer date
-                    db.collection("Transactions").document(mArrayList.get(position)[3]).update("issuerDate",new Timestamp(new Date()));
 
                     //update return date
                     Calendar c = Calendar.getInstance();
@@ -122,7 +117,7 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
                     c.set(Calendar.HOUR_OF_DAY, 23);
                     c.set(Calendar.MINUTE,59);
                     c.set(Calendar.SECOND,59);
-                    db.collection("Transactions").document(mArrayList.get(position)[3]).update("returnDate",c.getTime());
+                    db.collection("Transactions").document(mArrayList.get(position)[4]).update("returnDate",c.getTime());
 
                     Toast.makeText(getContext(), "Book Re-Issued! ", Toast.LENGTH_SHORT).show();
                 }
