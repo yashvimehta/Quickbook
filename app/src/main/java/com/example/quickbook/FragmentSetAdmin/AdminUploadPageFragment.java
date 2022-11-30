@@ -504,6 +504,7 @@ public class AdminUploadPageFragment extends Fragment {
         mMap.put("issuerDate", new Timestamp(new Date()));
         mMap.put("endIssue", false);
         mMap.put("feeValue", "0");
+        mMap.put("reIssue", "0");
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, Integer.parseInt(issueDuration[0]));
         c.set(Calendar.HOUR_OF_DAY, 23);
