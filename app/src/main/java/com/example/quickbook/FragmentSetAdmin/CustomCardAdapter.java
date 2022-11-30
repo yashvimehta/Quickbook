@@ -41,8 +41,7 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
 
     Context mContext;
     ArrayList<String[]>mArrayList;
-    boolean showLikes;
-    Button endIssueButton , reIssueButton;
+    Button endIssueButton;
     EditText setLateFeeEditText;
 
     public CustomCardAdapter(@NonNull Context context, ArrayList<String[]> stringArrayList) {
@@ -88,6 +87,8 @@ public class CustomCardAdapter extends ArrayAdapter<String[]> {
                                     db.collection("Transactions").document(documentID).update("endIssue", true);
                                     db.collection("Transactions").document(documentID).update("feeValue", 0);
                                     incrementBook(mArrayList.get(position)[1]);
+                                    Button endIssueBtn=view.findViewById(R.id.endIssue);
+                                    endIssueBtn.setVisibility(View.GONE);
                                 }
                                 else {
                                     Toast.makeText(getContext(), "Fees has been charged", Toast.LENGTH_SHORT).show();

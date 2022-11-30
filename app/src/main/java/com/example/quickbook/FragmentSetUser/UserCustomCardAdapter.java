@@ -47,7 +47,6 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
     FirebaseFirestore db;
     public static String rzpID;
     public static Button rzpButton;
-    public static Button riButton;
     public UserCustomCardAdapter(@NonNull Context context, ArrayList<String[]> stringArrayList) {
         super(context, R.layout.custom_card, stringArrayList);
         this.mContext = context;
@@ -69,7 +68,9 @@ public class UserCustomCardAdapter extends ArrayAdapter<String[]> {
         int fineAmount=Integer.parseInt(mArrayList.get(position)[2]);
         db = FirebaseFirestore.getInstance();
         reIssueButton = view.findViewById(R.id.reIssue);
-
+        if(mArrayList.get(position)[9].equals("true")){
+            returnDate.setText("Already Returned");
+        }
          if(mArrayList.get(position)[9].equals("true")||  Integer.parseInt(mArrayList.get(position)[6] ) >=  Integer.parseInt(mArrayList.get(position)[7])){
             reIssueButton.setVisibility(View.INVISIBLE);
         }

@@ -130,7 +130,12 @@ public class AdminIssuedBooksFragment extends Fragment {
                                 }
                             }
                             if (val == 0) {
-                                Toast.makeText(getContext(), "Member ID not found", Toast.LENGTH_SHORT).show();
+                                if (searchName.equals("")){
+                                    Toast.makeText(getContext(),"No book has been issued currently",Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "Given member ID has not issued any books currently", Toast.LENGTH_SHORT).show();
+                                }
                             }
                             sort(stringArrayList);
 
